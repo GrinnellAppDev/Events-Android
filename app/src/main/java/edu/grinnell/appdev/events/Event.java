@@ -1,9 +1,9 @@
 package edu.grinnell.appdev.events;
 
 /**
- * Created by ScutisorexThori on 2/15/18.
+ * Represents an event model. An event object holds the
+ * information about any specific event that is posted on the Grinnell Calender
  */
-
 public class Event {
     private String title;
     private String date;
