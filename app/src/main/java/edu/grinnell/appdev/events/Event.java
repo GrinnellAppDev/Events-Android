@@ -33,6 +33,4 @@ public class Event {
         return content;
     }
 
-
-
 }

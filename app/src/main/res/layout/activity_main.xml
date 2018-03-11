@@ -1,18 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.grinnell.appdev.events.MainActivity">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/ivEventPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
 
     <TextView
+        android:id="@+id/tvImageText"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignLeft="@id/ivEventPic"
+        android:layout_alignTop="@id/ivEventPic"
+        android:layout_alignRight="@id/ivEventPic"
+        android:layout_alignBottom="@id/ivEventPic"
+        android:layout_margin="1dp"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:text="FEB 15"/>
+
+    <TextView
+        android:id="@+id/tvEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_toRightOf="@+id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:textSize="20dp"
+        android:text="Event"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvEventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/tvEventName"
+        android:textSize="15dp"
+        android:text="Time"/>
+
+    <TextView
+        android:id="@+id/tvEventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/tvEventTime"
+        android:textSize="15dp"
+        android:text="Location"/>
+
+    <ImageView
+        android:id="@+id/ivComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivEventPic"
+        android:layout_below="@+id/tvEventLocation"
+        android:src="@drawable/ic_comments"/>
+
+    <TextView
+        android:id="@+id/tvNumComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvEventLocation"
+        android:layout_toRightOf="@id/ivComments"
+        android:textSize="15dp"
+        android:text="10"/>
+
+    <TextView
+        android:id="@+id/tvPeopleGoing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvNumComments"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/tvEventLocation"
+        android:textSize="15dp"
+        android:text="0 people going"/>
+
+</RelativeLayout>

@@ -2,6 +2,7 @@ package edu.grinnell.appdev.events;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,5 +18,7 @@ public class MainActivity extends AppCompatActivity {
         RealmConfiguration config = new RealmConfiguration.Builder().
                 deleteRealmIfMigrationNeeded().build();
         final Realm realm = Realm.getInstance(config);
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.relative_layout);
     }
 }
