@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/ivEventPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/tvImageText"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignTop="@id/ivEventPic"
+        android:layout_alignRight="@id/ivEventPic"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:text="FEB 15"/>
+
+    <TextView
+        android:id="@+id/tvEventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:textSize="20sp"
+        android:text="Event"/>
+
+    <TextView
+        android:id="@+id/tvEventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/tvEventName"
+        android:textSize="15sp"
+        android:text="Time"/>
+
+    <TextView
+        android:id="@+id/tvEventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivEventPic"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/tvEventTime"
+        android:textSize="15sp"
+        android:text="Location"/>
+
+    <ImageView
+        android:id="@+id/ivComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ivEventPic"
+        android:layout_below="@id/tvEventLocation"
+        android:src="@drawable/ic_comments"/>
+
+    <TextView
+        android:id="@+id/tvNumComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivComments"
+        android:layout_below="@id/tvEventLocation"
+        android:layout_toRightOf="@id/ivComments"
+        android:layout_marginTop="3dp"
+        android:textSize="15sp"
+        android:text="10"/>
+
+    <TextView
+        android:id="@+id/tvPeopleGoing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivComments"
+        android:layout_toRightOf="@id/tvNumComments"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="15sp"
+        android:text="0 people going"/>
+
+</RelativeLayout>
