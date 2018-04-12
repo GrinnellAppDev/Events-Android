@@ -105,9 +105,6 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
         }
         return sb.toString();
     }
-    public String getXMLstring() {
-        return xmlString;
-    }
 
     /**
      *

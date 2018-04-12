@@ -2,10 +2,17 @@ package edu.grinnell.appdev.events;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete{
-    String xmlData;
+    private String xmlData;
+    private List<Event> eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +24,9 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
+
+
+
     }
 
     /**
@@ -26,6 +36,18 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onDownloadComplete(String result) {
         xmlData = result;
+        XMLPullParser parser = new XMLPullParser();
+        if (xmlData != null) {
+            try {
+                parser.parse(xmlData);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        eventList = parser.getEventList();
+        Log.d("Debug", eventList.get(0).getContent());
     }
 
     /**
