@@ -17,10 +17,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import static edu.grinnell.appdev.events.Constants.*;
+
 
 public class XMLPullParser {
 
-    private static final int LENGTH_OF_XML_DECLARATION = 40;
     private List<Event> eventList;
     private String text;
     private Event event;
@@ -248,9 +249,8 @@ public class XMLPullParser {
             event.setStartTime(start);
             event.setEndTime(end);
 
-            Log.d("start", start.toString());
-            Log.d("end", end.toString());
-
+            //Log.d("start", start.toString());
+            //Log.d("end", end.toString());
         }
     }
 }

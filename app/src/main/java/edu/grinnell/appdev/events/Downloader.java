@@ -10,17 +10,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static edu.grinnell.appdev.events.Constants.*;
+
 /**
  * This class is responsible for downloading the XML from the web and
  * converting it into a string
  */
 public class Downloader extends AsyncTask <String, Void, Integer>{
-
-    //Constant for various successes or failures during parsing
-    private static final int ERROR_URL_PARSING = -1;
-    private static final int ERROR_STREAM = -2;
-    private static final int ERROR_NULL_STRING = -3;
-    private static final int SUCCESS = 0;
 
     private String xmlString;
     private OnDownloadComplete mOnDownloadComplete;
@@ -113,11 +109,11 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        if (result == 0) {
+        if (result == SUCCESS) {
             mOnDownloadComplete.onDownloadComplete(xmlString);
         }
         else {
-            String failMsg = "Downloading failed";
+            String failMsg = "Downloading of the XML failed";
             mOnDownloadComplete.onDownloadFail(failMsg);
         }
     }

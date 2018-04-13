@@ -2,12 +2,12 @@ package edu.grinnell.appdev.events;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import static edu.grinnell.appdev.events.Constants.*;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete{
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         setContentView(R.layout.activity_main);
 
         //Link to the XML file
-        String link = "http://25livepub.collegenet.com/calendars/web-calendar.xml";
+        String link = XML_STRING;
 
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
                 e.printStackTrace();
             }
         }
+        eventList = new ArrayList<>();
         eventList = parser.getEventList();
     }
 
