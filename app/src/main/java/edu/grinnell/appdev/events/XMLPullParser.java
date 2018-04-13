@@ -25,10 +25,20 @@ public class XMLPullParser {
     private String text;
     private Event event;
 
+    /**
+     *
+     * @return eventList A list that contains all the events
+     */
     public List<Event> getEventList() {
         return eventList;
     }
 
+    /**
+     *
+     * @param result The XML string to be processed
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     public void parse(String result) throws XmlPullParserException, IOException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -41,15 +51,17 @@ public class XMLPullParser {
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = xpp.getName();
             switch (eventType) {
+                //Case where the parser finds an event start tag
                 case XmlPullParser.START_TAG:
                     if (tagName.equalsIgnoreCase("title")) {
                         event = new Event();
                     }
                     break;
+                //Case where the parser finds core information about an event
                 case XmlPullParser.TEXT:
                     text = xpp.getText();
                     break;
-
+                //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
                     if (tagName.equalsIgnoreCase("entry")) {
                         eventList.add(event);
@@ -64,19 +76,25 @@ public class XMLPullParser {
                 default:
                     break;
             }
+            //Look for the next tag
             eventType = xpp.next();
         }
     }
 
     private void parseContent(String content) {
+        //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
+        //Description of the event
         String description = arr[3];
+        //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
             event.setContent(description);
 
+            //Location of the event
             String location = arr[0];
             event.setLocation(location);
 
+            //Start and end date for the events
             String date = arr[1];
             Log.d("debug", date);
             try {
@@ -88,6 +106,11 @@ public class XMLPullParser {
     }
 
     // Helper method to insert ":00" when the given time does not include minutes
+    /**
+     *
+     * @param input Time that needs to be added minutes
+     * @return Str Time represented in a string format
+     */
     public static String addMinutes(String input) {
         // Save the am/pm part of the string (last two digits)
         String ampm = input.substring(input.length() - 2, input.length());
@@ -96,28 +119,41 @@ public class XMLPullParser {
         String num = input.substring(0, input.length() - 2);
 
         // Concatenate all 3 pieces together, inserting the minutes between the given time and am/pm
-
         return num + ":00" + ampm;
     }
 
-    public static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek, String endDayOfWeek,
-                                                    String month, String endMonth, String dayOfMonth, String endDayOfMonth, String year){
+    /**
+     *
+     * @param unformattedTime Time that needs to be standardized
+     * @param dayOfWeek Day of the week that the event starts
+     * @param endDayOfWeek Day of the week that the event ends
+     * @param month The month that the event starts
+     * @param endMonth The month that the event ends
+     * @param dayOfMonth Day of the month that the event starts
+     * @param endDayOfMonth Day of the month that the event ends
+     * @param year The year that the event starts and ends
+     * @return strings formatted start and end times
+     */
+    public static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek,
+                                                    String endDayOfWeek,String month,
+                                                    String endMonth, String dayOfMonth,
+                                                    String endDayOfMonth, String year){
         // Create a tokenizer object that separates the test string using the given substring
         StringTokenizer token = new StringTokenizer(unformattedTime, " - ");
 
         // The "tokens" separated by the substring above that are extracted from the
         // given string will be stored in this list
-        ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> formattedTimes = new ArrayList<>();
 
         // Read all of the "tokens" and store them in the list
         while (token.hasMoreTokens()) {
-            strings.add(token.nextToken());
+            formattedTimes.add(token.nextToken());
         }
         // The first token (the start time)
-        String startTime = strings.get(0);
+        String startTime = formattedTimes.get(0);
 
         // The second token (the end time)
-        String endTime = strings.get(1);
+        String endTime = formattedTimes.get(1);
 
         // Check if the start time includes am/pm
         if (!startTime.contains("am") && !startTime.contains("pm")) {
@@ -138,12 +174,17 @@ public class XMLPullParser {
         }
 
         // Save the modified strings in the list again
-        strings.set(0, dayOfWeek + " " + month + " " + dayOfMonth + " " + year+ " " + startTime);
-        strings.set(1, endDayOfWeek + " " + endMonth + " " + endDayOfMonth + " " + year+ " " + endTime);
+        formattedTimes.set(0, dayOfWeek + " " + month + " " + dayOfMonth + " " + year+ " " + startTime);
+        formattedTimes.set(1, endDayOfWeek + " " + endMonth + " " + endDayOfMonth + " " + year+ " " + endTime);
 
-        return strings;
+        return formattedTimes;
     }
 
+    /**
+     *
+     * @param date Date that needs to be parsed
+     * @throws ParseException
+     */
     private void parseDate(String date) throws ParseException {
 
         //Splitting the date string using for commas and spaces to extract all the important info

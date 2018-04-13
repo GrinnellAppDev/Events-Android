@@ -24,9 +24,6 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
-
-
-
     }
 
     /**
