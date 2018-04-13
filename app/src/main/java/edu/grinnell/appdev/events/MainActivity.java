@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             }
         }
         eventList = parser.getEventList();
-        Log.d("Debug", eventList.get(0).getContent());
     }
 
     /**

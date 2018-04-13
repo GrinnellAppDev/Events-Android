@@ -14,19 +14,13 @@ public class Event {
     private Date endTime;
 
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {this.title = title;}
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+    public void setStartTime(Date startTime) {this.startTime = startTime;}
 
     public void setEndTime(Date endTime) {this.endTime = endTime;}
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    public void setContent(String content) {this.content = content;}
 
     public void setLocation(String location) { this.location = location; }
 
@@ -34,19 +28,10 @@ public class Event {
 
     public Date getEndTime() {return this.endTime;}
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() {return title;}
 
-    public String getContent() {
-        return content;
-    }
+    public String getContent() {return content;}
 
     public String getLocation() { return location; }
-
-
-
-
-
 
 }
