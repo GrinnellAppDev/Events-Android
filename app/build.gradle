@@ -3,6 +3,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "edu.grinnell.appdev.events"
         minSdkVersion 16
