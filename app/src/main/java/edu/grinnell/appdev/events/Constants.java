@@ -9,5 +9,6 @@ public class Constants {
     public static final int ERROR_NULL_STRING = -3;
     public static final int SUCCESS = 0;
     public static final int LENGTH_OF_XML_DECLARATION = 40;
+    public static final int ERROR_PARSING = -4;
     public static final String XML_STRING = "http://25livepub.collegenet.com/calendars/web-calendar.xml";
 }

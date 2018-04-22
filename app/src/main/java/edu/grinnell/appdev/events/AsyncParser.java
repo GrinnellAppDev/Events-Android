@@ -1,5 +1,7 @@
 package edu.grinnell.appdev.events;
 
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 
@@ -20,11 +22,16 @@ import java.util.StringTokenizer;
 import static edu.grinnell.appdev.events.Constants.*;
 
 
-public class XMLPullParser {
+public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
     private List<Event> eventList;
     private String text;
     private Event event;
+    private onParseComplete mOnParseComplete;
+
+    AsyncParser (Activity activity) {
+        this.mOnParseComplete = (onParseComplete) activity;
+    }
 
     /**
      *
@@ -34,19 +41,24 @@ public class XMLPullParser {
         return eventList;
     }
 
-    /**
-     *
-     * @param result The XML string to be processed
-     * @throws XmlPullParserException
-     * @throws IOException
-     */
-    public void parse(String result) throws XmlPullParserException, IOException {
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(result.substring(LENGTH_OF_XML_DECLARATION - 1)));
-        eventList = new ArrayList<>();
-        int eventType = xpp.getEventType();
+
+    //The method is supposed to parse the XML string that is passed as an argument
+    @Override
+    protected Integer doInBackground(String... strings) {
+        XmlPullParserFactory factory = null;
+        XmlPullParser xpp = null;
+        int eventType = 0;
+        try {
+            factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            xpp = factory.newPullParser();
+            xpp.setInput(new StringReader(strings[0].substring(LENGTH_OF_XML_DECLARATION - 1)));
+            eventList = new ArrayList<>();
+            eventType = xpp.getEventType();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+            return ERROR_PARSING;
+        }
 
         //Iterate through each event
         while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -78,11 +90,24 @@ public class XMLPullParser {
                     break;
             }
             //Look for the next tag
-            eventType = xpp.next();
+            try {
+                eventType = xpp.next();
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+                return ERROR_PARSING;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ERROR_PARSING;
+            }
         }
+        return SUCCESS;
     }
 
-    private void parseContent(String content) {
+    /**
+     *
+     * @param content A string that will be converted to a parsable format
+     */
+    private Integer parseContent(String content) {
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
         //Description of the event
@@ -97,13 +122,14 @@ public class XMLPullParser {
 
             //Start and end date for the events
             String date = arr[1];
-            Log.d("debug", date);
             try {
                 parseDate(date);
             } catch (ParseException e) {
                 e.printStackTrace();
+                return ERROR_PARSING;
             }
         }
+        return SUCCESS;
     }
 
     // Helper method to insert ":00" when the given time does not include minutes
@@ -248,9 +274,23 @@ public class XMLPullParser {
 
             event.setStartTime(start);
             event.setEndTime(end);
+        }
+    }
 
-            //Log.d("start", start.toString());
-            //Log.d("end", end.toString());
+
+    /**
+     *
+     * @param result An integer that tells if the download was a success
+     */
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+        if (result == SUCCESS) {
+            mOnParseComplete.onParseComplete(eventList);
+        }
+        else {
+            String failMsg = "Unable to load data";
+            mOnParseComplete.onParseFail(failMsg);
         }
     }
 }

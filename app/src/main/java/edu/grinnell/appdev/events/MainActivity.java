@@ -2,15 +2,14 @@ package edu.grinnell.appdev.events;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import org.xmlpull.v1.XmlPullParserException;
-import java.io.IOException;
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
 import static edu.grinnell.appdev.events.Constants.*;
 
 
-public class MainActivity extends AppCompatActivity implements OnDownloadComplete{
+public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
     private List<Event> eventList;
 
@@ -33,18 +32,9 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onDownloadComplete(String result) {
         xmlData = result;
-        XMLPullParser parser = new XMLPullParser();
         if (xmlData != null) {
-            try {
-                parser.parse(xmlData);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                new AsyncParser(this).execute(xmlData);
         }
-        eventList = new ArrayList<>();
-        eventList = parser.getEventList();
     }
 
     /**
@@ -54,5 +44,25 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onDownloadFail(String failMsg) {
         xmlData = failMsg;
+        Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     *
+     * @param completeEventList Aynctask return this if the parsing is successful
+     */
+    @Override
+    public void onParseComplete(List<Event> completeEventList) {
+        eventList = new ArrayList<>();
+        eventList = completeEventList;
+    }
+
+    /**
+     *
+     * @param failMsg Aynctask return this if the parsing fails
+     */
+    @Override
+    public void onParseFail(String failMsg) {
+        Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 }
