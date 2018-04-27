@@ -16,49 +16,29 @@ public class Event extends RealmObject{
 
     private String title;
     private String content;
+    private String location;
     private Date startTime;
     private Date endTime;
-    private String location;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+    public void setTitle(String title) {this.title = title;}
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+    public void setStartTime(Date startTime) {this.startTime = startTime;}
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
+    public void setEndTime(Date endTime) {this.endTime = endTime;}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setContent(String content) {this.content = content;}
 
-    public String getTitle() {
-        return title;
-    }
+    public void setLocation(String location) { this.location = location; }
 
-    public String getContent() {
-        return content;
-    }
+    public Date getStartTime() {return this.startTime;}
 
-    public Date getStartTime() {
-        return startTime;
-    }
+    public Date getEndTime() {return this.endTime;}
 
-    public Date getEndTime() {
-        return endTime;
-    }
+    public String getTitle() {return title;}
 
-    public String getLocation() {
-        return location;
-    }
+    public String getContent() {return content;}
+
+    public String getLocation() { return location; }
 
 }
-
