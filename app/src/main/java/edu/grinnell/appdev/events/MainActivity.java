@@ -1,9 +1,16 @@
 package edu.grinnell.appdev.events;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static edu.grinnell.appdev.events.Constants.*;
@@ -23,6 +30,30 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+        bottomNavigationViewInitialize(bottomNavigationView);
+
+    }
+
+    void bottomNavigationViewInitialize(BottomNavigationView bottomNavigationView){
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_home:
+                                break;
+                            case R.id.menu_search:
+                                break;
+                            case R.id.menu_favorites:
+                                break;
+                        }
+                        return true;
+                    }
+                });
     }
 
     /**
