@@ -12,5 +12,7 @@ public class IndividualEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_individual_event);
 
         // For scroll: yourTextView.setMovementMethod(new ScrollingMovementMethod());
+
+
     }
 }
