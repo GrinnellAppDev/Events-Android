@@ -2,11 +2,18 @@ package edu.grinnell.appdev.events;
 
 import java.util.Date;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Represents an event model. An event object holds the
  * information about any specific event that is posted on the Grinnell Calender
  */
-public class Event {
+public class Event extends RealmObject{
+
+    @PrimaryKey
+    private String eventID;
+
     private String title;
     private String content;
     private String location;
