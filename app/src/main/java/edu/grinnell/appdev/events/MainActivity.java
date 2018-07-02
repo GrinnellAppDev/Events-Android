@@ -53,11 +53,11 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
 
-        add();
+        add((EventRecyclerAdapter) myAdapter);
 
     }
 
-    public void add() {
+    public void add(EventRecyclerAdapter myAdapter) {
         Date start = new Date(2018, 5, 3, 10, 8);
         Date end = new Date(2018, 5, 3, 11, 8);
 

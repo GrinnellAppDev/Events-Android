@@ -1,119 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/ivEventPic"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
-
-    <TextView
-        android:id="@+id/tvImageText"
+    <LinearLayout
+        android:id="@+id/llDate"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignTop="@id/ivEventPic"
-        android:layout_alignRight="@id/ivEventPic"
-        android:layout_margin="3dp"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:text="FEB 15"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMonthText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorScarlet"
+            android:text="FEB"/>
+
+        <TextView
+            android:id="@+id/tvDayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above = "@+id/tvMonthText"
+            android:gravity="center"
+            android:textSize="35sp"
+            android:text="15"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tvEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/llDate"
+        android:layout_marginTop="13dp"
         android:textSize="20sp"
-        android:text="Event"/>
-
-    <TextView
-        android:id="@+id/tvEventTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_marginLeft="5dp"
-        android:layout_below="@id/tvEventName"
-        android:textSize="15sp"
-        android:text="Time"/>
+        android:textColor="@color/colorBlack"
+        android:text="Noyce Master Class - Andrew Jennings"/>
 
 
     <View
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="808080"
-        android:layout_alignBottom="@id/tvImageText"
+        android:layout_height="3dp"
+        android:background="#F3F3F3"
+        android:layout_alignBottom="@id/llDate"
         />
     <View
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="808080"
-        android:layout_marginTop="175dp"
+        android:layout_height="3dp"
+        android:background="#F3F3F3"
+        android:layout_below="@id/top_bar"
+        android:layout_marginTop="45dp"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignTop="@id/bottom_bar"
-        android:id="@+id/Location-Time">
+        android:layout_height="75dp"
+        android:layout_below="@+id/bottom_bar"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/Location-Time"
+        android:layout_marginLeft="10dp">
 
 
         <ImageView
             android:id="@+id/Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="0dp"
             android:src="@drawable/ic_clock"/>
 
         <TextView
+            android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/Time"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:text="Tue, 3 April at 6:30 PM"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            android:layout_marginLeft="10dp"
+            tools:ignore="NotSibling" />
 
         <ImageView
             android:id="@+id/Location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tvTime"
             android:src="@drawable/ic_location"/>
 
         <TextView
+            android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/Location"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/tvTime"
             android:text="Bucksbaum 152 - Lawson Lecture Hall"
+            android:layout_marginLeft="10dp"
             android:textSize="15sp"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F3F3F3"
+        android:layout_below="@id/Location-Time"/>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="250dp">
+        android:layout_below="@+id/Location-Time"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/Details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Details"
+            android:layout_marginTop="15dp"
+            android:textSize="15sp"/>
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_below = "@id/Details"
+            android:scrollbars="vertical"
+            android:textColor="@color/colorHTMLGray"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            android:textSize="15sp"
-            android:scrollbars = "vertical"/>
+            android:textSize="15sp" />
 
 
     </LinearLayout>
