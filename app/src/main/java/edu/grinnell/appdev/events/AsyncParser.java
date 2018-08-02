@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.UUID;
+
 
 import static edu.grinnell.appdev.events.Constants.*;
 
@@ -78,11 +80,13 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 case XmlPullParser.END_TAG:
                     if (tagName.equalsIgnoreCase("entry")) {
                         eventList.add(event);
+                        Log.d("debug", "doInBackground: ");
                     } else if (tagName.equalsIgnoreCase("title")) {
                         event.setTitle(text);
                     } else if (tagName.equalsIgnoreCase("content")) {
                         event.setContent(text);
                         parseContent(text);
+
                     }
                     break;
 

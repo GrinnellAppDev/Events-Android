@@ -1,24 +1,25 @@
 package edu.grinnell.appdev.events;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import static edu.grinnell.appdev.events.Constants.XML_STRING;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
-    private List<Event> eventList;
+    public static List<Event> eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
         //Downloading the XML through a separate thread
         new Downloader(this).execute(link);
+
+
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
@@ -84,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
      */
     @Override
     public void onParseComplete(List<Event> completeEventList) {
-        eventList = new ArrayList<>();
         eventList = completeEventList;
+        configureRecyclerView();
     }
 
     /**
@@ -95,5 +98,18 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onParseFail(String failMsg) {
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void configureRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.hasFixedSize();
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter((ArrayList<Event>) eventList);
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 }
