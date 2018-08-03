@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public void configureRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.hasFixedSize();
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setAddDuration(1000);
