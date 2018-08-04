@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +27,6 @@ import static android.provider.CalendarContract.Events;
 
 public class EventActivity extends AppCompatActivity{
 
-    private View view;
     private Event eventData;
 
         @Override
@@ -78,13 +78,15 @@ public class EventActivity extends AppCompatActivity{
             final String title = eventData.getTitle();
             String content = eventData.getContent();
             final String location = eventData.getLocation();
+            String email = eventData.getEmail();
 
             TextView tvMonthText = findViewById(R.id.tvMonthText);
             TextView tvDayText = findViewById(R.id.tvDayText);
             TextView tvEventName = findViewById(R.id.tvEventName);
             TextView tvEventTime = findViewById(R.id.tvTime);
             TextView tvEventLocation = findViewById(R.id.tvLocation);
-            TextView tvContent = findViewById(R.id.Details);
+            TextView tvContent = findViewById(R.id.Content);
+            TextView tvEmail = findViewById(R.id.tvEmail);
 
             tvMonthText.setText(month);
             tvDayText.setText(day);
@@ -92,6 +94,7 @@ public class EventActivity extends AppCompatActivity{
             tvEventTime.setText(dayName + ", " + day + " " + month + " at " + startTime);
             tvEventLocation.setText(location);
             tvContent.setText(content);
+            tvEmail.setText(email);
 
 
             Button calenderBtn = findViewById(R.id.Calender);
@@ -139,6 +142,7 @@ public class EventActivity extends AppCompatActivity{
 
 
         //Need to set AM_PM
+        // Use Async query handler
         Calendar beginTime = Calendar.getInstance(TimeZone.getTimeZone("Chicago"));
         Calendar cal = Calendar.getInstance();
         try {

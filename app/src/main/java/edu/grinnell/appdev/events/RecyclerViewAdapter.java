@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         final Event eventData = eventList.get(position);
+        if (eventData.getStartTime() == null){
+            Log.d("Title", eventData.getTitle());
+            Log.d("location", eventData.getLocation());
 
+        }
         String month = new SimpleDateFormat("MMM").format(eventData.getStartTime());
         String day = new SimpleDateFormat("dd").format(eventData.getStartTime());
         String hour = new SimpleDateFormat("hh").format(eventData.getStartTime());

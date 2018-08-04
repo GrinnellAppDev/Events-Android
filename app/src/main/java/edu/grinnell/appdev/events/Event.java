@@ -12,6 +12,8 @@ public class Event {
     private String location;
     private Date startTime;
     private Date endTime;
+    private String email;
+
 
 
     public void setTitle(String title) {this.title = title;}
@@ -24,6 +26,8 @@ public class Event {
 
     public void setLocation(String location) { this.location = location; }
 
+    public void setEmail(String email) {this.email = email;}
+
     public Date getStartTime() {return this.startTime;}
 
     public Date getEndTime() {return this.endTime;}
@@ -33,5 +37,7 @@ public class Event {
     public String getContent() {return content;}
 
     public String getLocation() { return location; }
+
+    public String getEmail() { return email; }
 
 }

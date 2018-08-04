@@ -72,6 +72,9 @@
         android:layout_below="@id/tvEventTime"
         android:textSize="15sp"
         android:text="Location"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="800dp"
         />
 
 </RelativeLayout>

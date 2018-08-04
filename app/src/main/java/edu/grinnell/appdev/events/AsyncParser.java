@@ -5,6 +5,11 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -18,8 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.UUID;
-
 
 import static edu.grinnell.appdev.events.Constants.*;
 
@@ -79,14 +82,15 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
                     if (tagName.equalsIgnoreCase("entry")) {
-                        eventList.add(event);
-                        Log.d("debug", "doInBackground: ");
+                        //eventList.add(event);
                     } else if (tagName.equalsIgnoreCase("title")) {
                         event.setTitle(text);
                     } else if (tagName.equalsIgnoreCase("content")) {
                         event.setContent(text);
                         parseContent(text);
-
+                        if (event.getStartTime() != null){
+                            eventList.add(event);
+                        }
                     }
                     break;
 
@@ -112,12 +116,30 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param content A string that will be converted to a parsable format
      */
     private Integer parseContent(String content) {
+
+
+        Document doc= (Document) Jsoup.parse(content);
+        Elements links = doc.select("a[href]");
+        String email = links.attr("href");
+        event.setEmail(email.substring(7));
+        Log.d("content", content);
+
+
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
         //Description of the event
         String description = arr[3];
+
         //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
+            /*if (arr[0].contains("August")) {
+                Log.d("arr[0]", arr[0]);
+                Log.d("arr[1]", arr[1]);
+                Log.d("arr[2]", arr[2]);
+                Log.d("arr[3]", arr[3]);
+                Log.d("arr[4]", arr[4]);
+                Log.d("arr[5]", arr[5]);
+            }*/
             event.setContent(description);
 
             //Location of the event

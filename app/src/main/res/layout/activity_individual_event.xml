@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/llDate"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="15dp"
         android:textSize="20sp"
         android:textColor="@color/colorBlack"
         android:text="Noyce Master Class - Andrew Jennings"/>
@@ -63,7 +63,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/bottom_bar"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -108,6 +108,47 @@
             android:layout_marginLeft="10dp"
             android:textSize="15sp"/>
 
+        <ImageView
+            android:id="@+id/Organizer"
+            android:layout_below="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_person"/>
+
+        <TextView
+            android:id="@+id/tvOrganizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/Email"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/tvLocation"
+            android:text="John Smith"
+            android:layout_marginLeft="10dp"
+            android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/Email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/Organizer"
+            android:src="@drawable/ic_email"/>
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/Email"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/tvOrganizer"
+            android:text="abc@grinnell.edu"
+            android:autoLink="email"
+            android:layout_marginLeft="10dp"
+            android:textSize="15sp"/>
+
+
+
     </RelativeLayout>
 
     <TextView
@@ -118,7 +159,7 @@
 
 
     <LinearLayout
-        android:id="@+id/Content"
+        android:id="@+id/Description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Location-Time"
@@ -136,6 +177,7 @@
 
 
         <TextView
+            android:id="@+id/Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below = "@id/Details"
@@ -149,9 +191,10 @@
         android:id="@+id/Calender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/Description"
         android:text="Add to Calender"/>
 
 
