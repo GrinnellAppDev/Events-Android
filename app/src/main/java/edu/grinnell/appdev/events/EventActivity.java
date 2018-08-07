@@ -189,8 +189,7 @@ public class EventActivity extends AppCompatActivity{
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Permission Denied!", Toast.LENGTH_LONG).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo!
                 }
                 return;
             }

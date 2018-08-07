@@ -1,6 +1,7 @@
 package edu.grinnell.appdev.events;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +21,21 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
 
     private String xmlString;
     private OnDownloadComplete mOnDownloadComplete;
+    private Activity activity;
+    private ProgressDialog progressDialog;
+
 
     Downloader(Activity activity) {
         this.mOnDownloadComplete = (OnDownloadComplete) activity;
+        this.activity = activity;
+    }
+
+    @Override
+    protected void onPreExecute(){
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("App status");
+        progressDialog.setMessage("Downloading data");
+        progressDialog.show();
     }
 
     /**
@@ -116,6 +129,8 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
             String failMsg = "Downloading of the XML failed";
             mOnDownloadComplete.onDownloadFail(failMsg);
         }
+        progressDialog.dismiss();
+
     }
 
 }

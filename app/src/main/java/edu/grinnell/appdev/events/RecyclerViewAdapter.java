@@ -53,14 +53,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.tvEventTime.setText(startTime);
         holder.tvEventLocation.setText(eventData.getLocation());
 
+        //Expands a particular event page
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, EventActivity.class);
                 Bundle b = new Bundle();
-                b.putInt("eventNo", position); //Your id
-                intent.putExtras(b); //Put your id to your next Intent
+                b.putInt("eventNo", position);
+                intent.putExtras(b);
                 context.startActivity(intent);
             }
         });

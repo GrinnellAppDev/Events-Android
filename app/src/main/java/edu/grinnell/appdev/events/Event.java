@@ -13,6 +13,7 @@ public class Event {
     private Date startTime;
     private Date endTime;
     private String email;
+    private String organizer;
 
 
 
@@ -28,6 +29,8 @@ public class Event {
 
     public void setEmail(String email) {this.email = email;}
 
+    public void setOrganizer(String organizer) {this.organizer = organizer;}
+
     public Date getStartTime() {return this.startTime;}
 
     public Date getEndTime() {return this.endTime;}
@@ -39,5 +42,7 @@ public class Event {
     public String getLocation() { return location; }
 
     public String getEmail() { return email; }
+
+    public String getOrganizer() { return organizer; }
 
 }

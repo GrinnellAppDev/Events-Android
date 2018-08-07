@@ -1,15 +1,16 @@
 package edu.grinnell.appdev.events;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -24,7 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import static edu.grinnell.appdev.events.Constants.ERROR_PARSING;
+import static edu.grinnell.appdev.events.Constants.LENGTH_OF_XML_DECLARATION;
+import static edu.grinnell.appdev.events.Constants.SUCCESS;
 
 
 public class AsyncParser extends AsyncTask<String, Void, Integer>{
@@ -33,9 +36,12 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private String text;
     private Event event;
     private onParseComplete mOnParseComplete;
+    private ProgressDialog progressDialog;
+    private Activity activity;
 
     AsyncParser (Activity activity) {
         this.mOnParseComplete = (onParseComplete) activity;
+        this.activity = activity;
     }
 
     /**
@@ -46,7 +52,13 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         return eventList;
     }
 
-
+    @Override
+    protected void onPreExecute(){
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle("App status");
+        progressDialog.setMessage("Downloading data");
+        progressDialog.show();
+    }
     //The method is supposed to parse the XML string that is passed as an argument
     @Override
     protected Integer doInBackground(String... strings) {
@@ -117,13 +129,14 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      */
     private Integer parseContent(String content) {
 
-
+        //Add email
         Document doc= (Document) Jsoup.parse(content);
-        Elements links = doc.select("a[href]");
-        String email = links.attr("href");
-        event.setEmail(email.substring(7));
-        Log.d("content", content);
+        Element email = doc.select("a").last();
+        event.setEmail(email.text());
 
+        //Element sub = doc.select("S").last();
+        Element sub = doc.getElementsByAttributeStarting("b").first();
+        //Log.d("content", doc.html(content).toString());
 
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
@@ -132,14 +145,6 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
         //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
-            /*if (arr[0].contains("August")) {
-                Log.d("arr[0]", arr[0]);
-                Log.d("arr[1]", arr[1]);
-                Log.d("arr[2]", arr[2]);
-                Log.d("arr[3]", arr[3]);
-                Log.d("arr[4]", arr[4]);
-                Log.d("arr[5]", arr[5]);
-            }*/
             event.setContent(description);
 
             //Location of the event
@@ -318,6 +323,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             String failMsg = "Unable to load data";
             mOnParseComplete.onParseFail(failMsg);
         }
+        progressDialog.dismiss();
     }
 }
 
