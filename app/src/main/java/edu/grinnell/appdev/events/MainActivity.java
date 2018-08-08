@@ -6,17 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static edu.grinnell.appdev.events.Constants.XML_STRING;
@@ -25,11 +19,9 @@ import static edu.grinnell.appdev.events.Constants.XML_STRING;
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
     public static List<Event> eventList;
-    private FragmentManager fragmentManager;
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
-    private FrameLayout container;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +39,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
 
 
-        container = findViewById(R.id.container);
         homeFragment = new FragmentHome();
         searchFragment = new FragmentSearch();
         favoritesFragment = new FragmentFavorites();
         //setFragment(homeFragment);
         bottomNavigationViewInitialize(bottomNavigationView);
-        //CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-        //layoutParams.setBehavior(new BottomNavigationViewBehavior());
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationViewBehavior());
 
 
     }

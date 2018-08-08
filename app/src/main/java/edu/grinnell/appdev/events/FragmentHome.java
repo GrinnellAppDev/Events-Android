@@ -2,6 +2,8 @@ package edu.grinnell.appdev.events;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -41,13 +50,14 @@ public class FragmentHome extends Fragment {
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         configureRecyclerView();
-        Log.d("dbug", "configureRecyclerView : ");
-
     }
+
 
 
 }

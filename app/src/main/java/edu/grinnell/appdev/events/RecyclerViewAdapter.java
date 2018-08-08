@@ -9,7 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
@@ -63,6 +69,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 b.putInt("eventNo", position);
                 intent.putExtras(b);
                 context.startActivity(intent);
+            }
+        });
+
+        setUpFavoritesButton(holder);
+
+    }
+
+    public void setUpFavoritesButton(final ViewHolder holder){
+        //Animate the favorites button
+        final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f);
+        scaleAnimation.setDuration(500);
+        BounceInterpolator bounceInterpolator = new BounceInterpolator();
+        scaleAnimation.setInterpolator(bounceInterpolator);
+        final ToggleButton favorites = (ToggleButton) holder.itemView.findViewById(R.id.myToggleButton);
+
+        //Listen for any toggle in the favorites button
+        favorites.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                //animation
+                compoundButton.startAnimation(scaleAnimation);
+                if (isChecked){
+                    Toast.makeText(holder.itemView.getContext(), "checked", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(holder.itemView.getContext(), "unchecked", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

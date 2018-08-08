@@ -28,25 +28,9 @@ public class FragmentSearch extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d("dbug", "configureRecyclerView: ");
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
-    public void configureRecyclerView(){
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.my_recycler_view);
-        recyclerView.hasFixedSize();
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter((ArrayList<Event>) MainActivity.eventList);
-        recyclerView.setAdapter(recyclerViewAdapter);
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        configureRecyclerView();
-        Log.d("dbug", "configureRecyclerView: ");
-
-    }
 
 }

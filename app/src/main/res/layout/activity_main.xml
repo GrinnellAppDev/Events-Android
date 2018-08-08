@@ -26,8 +26,8 @@
                 android:layout_height="56dp"
                 android:layout_gravity="bottom"
                 app:itemBackground="@color/colorWhite"
-                app:itemIconTint="@color/colorDarkgray"
-                app:itemTextColor="@color/colorDarkgray"
+                app:itemTextColor="@color/colorBlack"
+                app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
                 app:menu="@menu/bottom_navigation_main" />
 
 

@@ -75,7 +75,21 @@
         android:text="Location"
         android:ellipsize="end"
         android:maxLines="1"
-        android:maxWidth="800dp"
+        android:maxWidth="275dp"
+        />
+
+    <ToggleButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:id="@+id/myToggleButton"
+        android:background="@drawable/button_favorite"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textOn=""
+        android:textOff=""
+        android:text=""
         />
 
 </RelativeLayout>
