@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,12 @@ import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Event> eventList;
+    private ArrayList<Event> favorites;
 
-    public RecyclerViewAdapter(ArrayList<Event> list){
+    public HomeRecyclerViewAdapter(ArrayList<Event> list){
         this.eventList = list;
     }
 
@@ -36,15 +36,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(eventRow);
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void configureView(ViewHolder holder, int position){
 
         final Event eventData = eventList.get(position);
-        if (eventData.getStartTime() == null){
-            Log.d("Title", eventData.getTitle());
-            Log.d("location", eventData.getLocation());
 
-        }
         String month = new SimpleDateFormat("MMM").format(eventData.getStartTime());
         String day = new SimpleDateFormat("dd").format(eventData.getStartTime());
         String hour = new SimpleDateFormat("hh").format(eventData.getStartTime());
@@ -58,6 +53,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.tvEventName.setText(eventData.getTitle());
         holder.tvEventTime.setText(startTime);
         holder.tvEventLocation.setText(eventData.getLocation());
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+
+        configureView(holder, position);
 
         //Expands a particular event page
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,11 +73,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-        setUpFavoritesButton(holder);
+        setUpFavoritesButton(holder, position);
 
     }
 
-    public void setUpFavoritesButton(final ViewHolder holder){
+    public void setUpFavoritesButton(final ViewHolder holder, int position){
         //Animate the favorites button
         final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f);
@@ -92,6 +93,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
                 if (isChecked){
+                    //NEED TO ADD TO FAVORITES
                     Toast.makeText(holder.itemView.getContext(), "checked", Toast.LENGTH_SHORT).show();
                 }
                 else {

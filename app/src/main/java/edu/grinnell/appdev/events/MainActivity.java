@@ -1,7 +1,9 @@
 package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,6 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static edu.grinnell.appdev.events.Constants.XML_STRING;
@@ -22,26 +29,42 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
+    SharedPreferences shared;
+
+    public final String FULL_LIST = "FULL_LIST";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        homeFragment = new FragmentHome();
+        searchFragment = new FragmentSearch();
+        favoritesFragment = new FragmentFavorites();
+
         //Link to the XML file
         String link = XML_STRING;
 
-        //Downloading the XML through a separate thread
-        new Downloader(this).execute(link);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
 
+
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+            Gson gson = new Gson();
+            eventList = gson.fromJson(json, type); //Restore previous data
+            setFragment(homeFragment);
+        }
+        else {
+            //Downloading the XML through a separate thread
+            new Downloader(this).execute(link);
+
+        }
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 
-
-
-        homeFragment = new FragmentHome();
-        searchFragment = new FragmentSearch();
-        favoritesFragment = new FragmentFavorites();
         //setFragment(homeFragment);
         bottomNavigationViewInitialize(bottomNavigationView);
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
@@ -109,7 +132,9 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public void onParseComplete(List<Event> completeEventList) {
         eventList = completeEventList;
         setFragment(homeFragment);
+        storeEvents();
     }
+
 
     /**
      *
@@ -120,6 +145,15 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 
+    public void storeEvents(){
+        shared = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
 
+        String json = gson.toJson(eventList); //Convert the array to json
+
+        editor.putString(FULL_LIST, json); //Put the variable in memory
+        editor.commit();
+    }
 
 }
