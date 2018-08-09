@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private FragmentFavorites favoritesFragment;
     SharedPreferences shared;
 
-    public final String FULL_LIST = "FULL_LIST";
+    public static final String FULL_LIST = "FULL_LIST";
 
 
     @Override
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public void onParseComplete(List<Event> completeEventList) {
         eventList = completeEventList;
         setFragment(homeFragment);
-        storeEvents();
+        storeEvents((ArrayList<Event>) eventList);
     }
 
 
@@ -145,15 +145,15 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 
-    public void storeEvents(){
+    public void storeEvents(ArrayList<Event> eventArrayList){
         shared = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
 
-        String json = gson.toJson(eventList); //Convert the array to json
+        String json = gson.toJson(eventArrayList); //Convert the array to json
 
         editor.putString(FULL_LIST, json); //Put the variable in memory
-        editor.commit();
+        editor.apply();
     }
 
 }

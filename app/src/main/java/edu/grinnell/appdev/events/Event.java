@@ -1,5 +1,7 @@
 package edu.grinnell.appdev.events;
 
+import android.support.design.widget.BottomNavigationView;
+
 import java.util.Date;
 
 /**
@@ -14,6 +16,7 @@ public class Event {
     private Date endTime;
     private String email;
     private String organizer;
+    private int isFavorite;
 
 
 
@@ -31,6 +34,8 @@ public class Event {
 
     public void setOrganizer(String organizer) {this.organizer = organizer;}
 
+    public void setIsFavorite(int choice) {this.isFavorite = choice;}
+
     public Date getStartTime() {return this.startTime;}
 
     public Date getEndTime() {return this.endTime;}
@@ -44,5 +49,7 @@ public class Event {
     public String getEmail() { return email; }
 
     public String getOrganizer() { return organizer; }
+
+    public int getIsFavorite() {return isFavorite; }
 
 }

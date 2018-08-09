@@ -3,8 +3,11 @@ package edu.grinnell.appdev.events;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 
@@ -23,10 +28,12 @@ import java.text.SimpleDateFormat;
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Event> eventList;
+    private Context context;
     private ArrayList<Event> favorites;
 
-    public HomeRecyclerViewAdapter(ArrayList<Event> list){
+    public HomeRecyclerViewAdapter(ArrayList<Event> list, Context context){
         this.eventList = list;
+        this.context = context;
     }
 
     @Override
@@ -77,7 +84,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
     }
 
-    public void setUpFavoritesButton(final ViewHolder holder, int position){
+    public void setUpFavoritesButton(final ViewHolder holder, final int position){
         //Animate the favorites button
         final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f);
@@ -85,6 +92,14 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         BounceInterpolator bounceInterpolator = new BounceInterpolator();
         scaleAnimation.setInterpolator(bounceInterpolator);
         final ToggleButton favorites = (ToggleButton) holder.itemView.findViewById(R.id.myToggleButton);
+
+        //Log.d("dbug", eventList.get(position).getIsFavorite()+" "+eventList.get(position).getTitle());
+
+        if (eventList != null) {
+            if (eventList.get(position).getIsFavorite() == 1) {
+                favorites.setChecked(true);
+            }
+        }
 
         //Listen for any toggle in the favorites button
         favorites.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
@@ -94,13 +109,27 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                 compoundButton.startAnimation(scaleAnimation);
                 if (isChecked){
                     //NEED TO ADD TO FAVORITES
+                    MainActivity.eventList.get(position).setIsFavorite(1);
+                    storeEvents((ArrayList<Event>) MainActivity.eventList);
                     Toast.makeText(holder.itemView.getContext(), "checked", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    MainActivity.eventList.get(position).setIsFavorite(0);
                     Toast.makeText(holder.itemView.getContext(), "unchecked", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+    //FIND A BETTER WAY TO ABSTRACT OUT THIS (ALSO USED IN MAIN ACTIVITY)
+    public void storeEvents(ArrayList<Event> eventArrayList){
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+
+        String json = gson.toJson(eventArrayList); //Convert the array to json
+
+        editor.putString(MainActivity.FULL_LIST, json); //Put the variable in memory
+        editor.apply();
     }
 
     @Override

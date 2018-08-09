@@ -36,7 +36,7 @@ public class FragmentHome extends Fragment {
         recyclerView.hasFixedSize();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        HomeRecyclerViewAdapter recyclerViewAdapter = new HomeRecyclerViewAdapter((ArrayList<Event>) MainActivity.eventList);
+        HomeRecyclerViewAdapter recyclerViewAdapter = new HomeRecyclerViewAdapter((ArrayList<Event>) MainActivity.eventList, getContext());
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 

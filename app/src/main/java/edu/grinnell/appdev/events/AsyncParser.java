@@ -85,6 +85,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 case XmlPullParser.START_TAG:
                     if (tagName.equalsIgnoreCase("title")) {
                         event = new Event();
+                        event.setIsFavorite(0);
                     }
                     break;
                 //Case where the parser finds core information about an event
