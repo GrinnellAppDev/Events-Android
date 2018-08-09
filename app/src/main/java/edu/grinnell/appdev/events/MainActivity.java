@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -69,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         bottomNavigationViewInitialize(bottomNavigationView);
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationViewBehavior());
+        getSupportActionBar().hide();//Ocultar ActivityBar anterior
+        //Toolbar homeToolBar = findViewById(R.id.my_toolbar);
+        //setSupportActionBar(homeToolBar);
 
 
     }

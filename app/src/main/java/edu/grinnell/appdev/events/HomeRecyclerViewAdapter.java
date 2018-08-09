@@ -93,8 +93,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         scaleAnimation.setInterpolator(bounceInterpolator);
         final ToggleButton favorites = (ToggleButton) holder.itemView.findViewById(R.id.myToggleButton);
 
-        //Log.d("dbug", eventList.get(position).getIsFavorite()+" "+eventList.get(position).getTitle());
-
         if (eventList != null) {
             if (eventList.get(position).getIsFavorite() == 1) {
                 favorites.setChecked(true);
@@ -109,14 +107,14 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                 compoundButton.startAnimation(scaleAnimation);
                 if (isChecked){
                     //NEED TO ADD TO FAVORITES
-                    MainActivity.eventList.get(position).setIsFavorite(1);
-                    storeEvents((ArrayList<Event>) MainActivity.eventList);
+                    eventList.get(position).setIsFavorite(1);
                     Toast.makeText(holder.itemView.getContext(), "checked", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    MainActivity.eventList.get(position).setIsFavorite(0);
+                    eventList.get(position).setIsFavorite(0);
                     Toast.makeText(holder.itemView.getContext(), "unchecked", Toast.LENGTH_SHORT).show();
                 }
+                storeEvents(eventList);
             }
         });
     }
