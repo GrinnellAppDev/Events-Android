@@ -1,6 +1,8 @@
 package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -30,9 +33,10 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
-    SharedPreferences shared;
+    public static SharedPreferences shared;
 
     public static final String FULL_LIST = "FULL_LIST";
+
 
 
     @Override
@@ -63,17 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
         }
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-
-        //setFragment(homeFragment);
-        bottomNavigationViewInitialize(bottomNavigationView);
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-        layoutParams.setBehavior(new BottomNavigationViewBehavior());
-        getSupportActionBar().hide();//Ocultar ActivityBar anterior
-        //Toolbar homeToolBar = findViewById(R.id.my_toolbar);
-        //setSupportActionBar(homeToolBar);
-
+        setUpMainActivityUI();
 
     }
 
@@ -97,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
                         return true;
                     }
                 });
+    }
+
+    public void downloadContent(){
+        new Downloader(this).execute(Constants.XML_STRING);
     }
 
     private void setFragment(Fragment fragment) {
@@ -136,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public void onParseComplete(List<Event> completeEventList) {
         eventList = completeEventList;
         setFragment(homeFragment);
-        storeEvents((ArrayList<Event>) eventList);
+        storeEvents((ArrayList<Event>) eventList, this);
     }
 
 
@@ -149,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 
-    public void storeEvents(ArrayList<Event> eventArrayList){
-        shared = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+    public static void storeEvents(ArrayList<Event> eventArrayList, Context context){
+        shared = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
 
@@ -159,5 +157,44 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         editor.putString(FULL_LIST, json); //Put the variable in memory
         editor.apply();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.action_button, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();  return true;
+        }
+        deleteSharedPreferences();
+        this.recreate();
+        //downloadContent();
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteSharedPreferences(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+    public void setUpMainActivityUI(){
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+        bottomNavigationViewInitialize(bottomNavigationView);
+
+        Toolbar homeToolBar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(homeToolBar);
+    }
+
 
 }
