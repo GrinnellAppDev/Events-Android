@@ -3,8 +3,11 @@ package edu.grinnell.appdev.events;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +16,36 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.MainActivity.FULL_LIST;
+import static edu.grinnell.appdev.events.MainActivity.eventList;
+import static edu.grinnell.appdev.events.MainActivity.favoritesList;
+import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 
 
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<Event> eventList;
     private Context context;
-    private ArrayList<Event> favorites;
-    private HashMap<Event, Boolean> map;
 
-    public HomeRecyclerViewAdapter(ArrayList<Event> list, Context context){
-        this.eventList = list;
+    public HomeRecyclerViewAdapter(Context context){
         this.context = context;
-        map = new HashMap<>();
+        favoritesList = new ArrayList<>();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String favStr = sharedPrefs.getString(FAVORITES_LIST, null);
+        if (favStr != null){
+            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+            Gson gson = new Gson();
+            favoritesList = gson.fromJson(favStr, type); //Restore previous data
+        }
     }
 
     @Override
@@ -42,7 +56,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         return new ViewHolder(eventRow);
     }
 
-    public void configureView(ViewHolder holder, int position){
+    public static void configureView(ViewHolder holder, int position){
 
         final Event eventData = eventList.get(position);
 
@@ -78,7 +92,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                 context.startActivity(intent);
             }
         });
-
         setUpFavoritesButton(holder, position);
 
     }
@@ -93,20 +106,30 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         return scaleAnimation;
     }
 
+    public boolean containsID (String id, ArrayList<Event> favorites){
+        for (Event event: favorites){
+            if (id.equals(event.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void setUpFavoritesButton(final ViewHolder holder, final int position){
         //Animate the favorites button
         final ScaleAnimation scaleAnimation = setAnimation();
 
-        //Make sure that the buttons work properly when view is gettig recycled
+        //Make sure that the buttons work properly when view is getting recycled
         holder.favorites.setOnCheckedChangeListener(null);
         holder.favorites.setChecked(false);
 
+        //Restore state of toggle button while scrolling and refreshing the data
         if (eventList != null) {
-            if (eventList.get(position).getIsFavorite()){
+            Event event = eventList.get(position);
+            if (containsID(event.getId(), favoritesList)){
+                Log.d("inside btn check", "setUpFavoritesButton: ");
                 holder.favorites.setChecked(true);
             }
-
         }
 
         //Listen for any toggle in the favorites button
@@ -115,16 +138,17 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
+                Event event = eventList.get(position);
                 if (isChecked){
-                    //NEED TO ADD TO FAVORITES
-                    eventList.get(position).setIsFavorite(true);
-                    Toast.makeText(holder.itemView.getContext(), "checked", Toast.LENGTH_SHORT).show();
+                    event.setIsFavorite(true);
+                    favoritesList.add(event);
                 }
                 else {
-                    eventList.get(position).setIsFavorite(false);
-                    Toast.makeText(holder.itemView.getContext(), "unchecked", Toast.LENGTH_SHORT).show();
+                    event.setIsFavorite(false);
+                    favoritesList.remove(event);
                 }
-                MainActivity.storeEvents(eventList, context);
+                storeEvents((ArrayList<Event>) eventList, context, FULL_LIST);
+                storeEvents(favoritesList, context, FAVORITES_LIST);
             }
         });
     }

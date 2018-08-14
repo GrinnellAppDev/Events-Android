@@ -1,15 +1,16 @@
 package edu.grinnell.appdev.events;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 
 
 /**
@@ -17,11 +18,7 @@ import java.util.ArrayList;
  */
 public class FragmentHome extends Fragment {
 
-
-    public FragmentHome() {
-        // Required empty public constructor
-    }
-
+    public HomeRecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,12 +28,12 @@ public class FragmentHome extends Fragment {
     }
 
 
-    public void configureRecyclerView(){
+    public void configureRecyclerView(Activity activity){
         RecyclerView recyclerView = getView().findViewById(R.id.my_recycler_view);
         recyclerView.hasFixedSize();
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        HomeRecyclerViewAdapter recyclerViewAdapter = new HomeRecyclerViewAdapter((ArrayList<Event>) MainActivity.eventList, getContext());
+        recyclerViewAdapter = new HomeRecyclerViewAdapter(activity);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -45,7 +42,9 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        configureRecyclerView();
+
+        configureRecyclerView(getActivity());
+
     }
 
 

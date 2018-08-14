@@ -83,8 +83,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             switch (eventType) {
                 //Case where the parser finds an event start tag
                 case XmlPullParser.START_TAG:
-                    if (tagName.equalsIgnoreCase("title")) {
-                        event = new Event();
+                    if (tagName.equalsIgnoreCase("entry")) {
+                        //event = new Event();
                         event.setIsFavorite(false);
                     }
                     break;
@@ -98,6 +98,9 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                         //eventList.add(event);
                     } else if (tagName.equalsIgnoreCase("title")) {
                         event.setTitle(text);
+                    } else if (tagName.equalsIgnoreCase("id")) {
+                        event = new Event();
+                        event.setID(text);
                     } else if (tagName.equalsIgnoreCase("content")) {
                         event.setContent(text);
                         parseContent(text);

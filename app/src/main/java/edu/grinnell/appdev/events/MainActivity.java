@@ -1,18 +1,18 @@
 package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,24 +20,24 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static edu.grinnell.appdev.events.Constants.XML_STRING;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
     public static List<Event> eventList;
+    public static ArrayList<Event> favoritesList;
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
     public static SharedPreferences shared;
 
     public static final String FULL_LIST = "FULL_LIST";
-
-
+    public static final String FAVORITES_LIST = "FAVORITES_LST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,24 +48,23 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         searchFragment = new FragmentSearch();
         favoritesFragment = new FragmentFavorites();
 
-        //Link to the XML file
-        String link = XML_STRING;
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
-
 
         if (json != null) {
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
             Gson gson = new Gson();
             eventList = gson.fromJson(json, type); //Restore previous data
+            Toast.makeText(this, "Data restored from cache", Toast.LENGTH_SHORT).show();
             setFragment(homeFragment);
         }
         else {
             //Downloading the XML through a separate thread
-            new Downloader(this).execute(link);
+            downloadContent();
 
         }
+
 
         setUpMainActivityUI();
 
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public void onParseComplete(List<Event> completeEventList) {
         eventList = completeEventList;
         setFragment(homeFragment);
-        storeEvents((ArrayList<Event>) eventList, this);
+        storeEvents((ArrayList<Event>) eventList, this, FULL_LIST);
     }
 
 
@@ -147,14 +146,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 
-    public static void storeEvents(ArrayList<Event> eventArrayList, Context context){
+    public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String filename){
         shared = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-
-        String json = gson.toJson(eventArrayList); //Convert the array to json
-
-        editor.putString(FULL_LIST, json); //Put the variable in memory
+        String json = "";
+        json = gson.toJson(eventArrayList); //Convert the array to json
+        editor.putString(filename, json); //Put the variable in memory
         editor.apply();
     }
 
@@ -172,17 +170,16 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         if (id == android.R.id.home) {
             onBackPressed();  return true;
         }
-        deleteSharedPreferences();
+        deleteSharedPreferencesFile(FULL_LIST);
         this.recreate();
-        //downloadContent();
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void deleteSharedPreferences(){
+    public void deleteSharedPreferencesFile(String filename){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.clear();
+        editor.remove(filename);
         editor.apply();
     }
 

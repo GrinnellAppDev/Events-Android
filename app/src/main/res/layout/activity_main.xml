@@ -42,9 +42,6 @@
                     app:itemIconTint="@drawable/bottom_nav_icon_color_selector"
                     app:menu="@menu/bottom_navigation_main" />
 
-
-
-
         </android.support.design.widget.CoordinatorLayout>
 
         <!---NavigationView-->
