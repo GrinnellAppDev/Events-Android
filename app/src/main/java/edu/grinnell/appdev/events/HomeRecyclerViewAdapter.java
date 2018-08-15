@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +24,23 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
-import static edu.grinnell.appdev.events.MainActivity.FULL_LIST;
 import static edu.grinnell.appdev.events.MainActivity.eventList;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 
 
-public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerViewAdapter.ViewHolder> {
+public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
 
-    public HomeRecyclerViewAdapter(Context context){
+    /**
+     *
+     * @param context A context field required to store in shared preference
+     */
+    HomeRecyclerViewAdapter(Context context){
         this.context = context;
         favoritesList = new ArrayList<>();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -56,16 +60,21 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         return new ViewHolder(eventRow);
     }
 
-    public static void configureView(ViewHolder holder, int position){
+    /**
+     *
+     * @param holder Holder object that holds all the elements of a view
+     * @param position Index in a recycler view
+     */
+    private void configureView(ViewHolder holder, int position){
 
         final Event eventData = eventList.get(position);
 
-        String month = new SimpleDateFormat("MMM").format(eventData.getStartTime());
-        String day = new SimpleDateFormat("dd").format(eventData.getStartTime());
-        String hour = new SimpleDateFormat("hh").format(eventData.getStartTime());
-        String minutes = new SimpleDateFormat("mm").format(eventData.getStartTime());
-        String ampm = new SimpleDateFormat("aa").format(eventData.getStartTime());
-        String dayName = new SimpleDateFormat("EEEE").format(eventData.getStartTime());
+        String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
+        String day = new SimpleDateFormat("dd", Locale.US).format(eventData.getStartTime());
+        String hour = new SimpleDateFormat("hh", Locale.US).format(eventData.getStartTime());
+        String minutes = new SimpleDateFormat("mm", Locale.US).format(eventData.getStartTime());
+        String ampm = new SimpleDateFormat("aa", Locale.US).format(eventData.getStartTime());
+        String dayName = new SimpleDateFormat("EEEE", Locale.US).format(eventData.getStartTime());
         String startTime = hour + ":" + minutes + " " + ampm + " on " + dayName;
 
         holder.tvMonthText.setText(month);
@@ -96,7 +105,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
     }
 
-    public ScaleAnimation setAnimation(){
+    /**
+     *
+     * @return Scale Animation : Animation of the favorites button when clicked
+     */
+    private ScaleAnimation setAnimation(){
         final ScaleAnimation scaleAnimation = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f,
                 Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f);
         scaleAnimation.setDuration(500);
@@ -106,7 +119,13 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         return scaleAnimation;
     }
 
-    public boolean containsID (String id, ArrayList<Event> favorites){
+    /**
+     *
+     * @param id String that represents the unique id of a particular event
+     * @param favorites List that represents favorites marked by the user
+     * @return boolean to indicate whether a particular event is in the favorites list
+     */
+    private boolean containsID (String id, ArrayList<Event> favorites){
         for (Event event: favorites){
             if (id.equals(event.getId())){
                 return true;
@@ -115,7 +134,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         return false;
     }
 
-    public void setUpFavoritesButton(final ViewHolder holder, final int position){
+    /**
+     *
+     * @param holder Holder object that holds all the elements of a view
+     * @param position Index in a recycler view
+     */
+    private void setUpFavoritesButton(final ViewHolder holder, final int position){
         //Animate the favorites button
         final ScaleAnimation scaleAnimation = setAnimation();
 
@@ -127,7 +151,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
         if (eventList != null) {
             Event event = eventList.get(position);
             if (containsID(event.getId(), favoritesList)){
-                Log.d("inside btn check", "setUpFavoritesButton: ");
                 holder.favorites.setChecked(true);
             }
         }
@@ -140,34 +163,56 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                 compoundButton.startAnimation(scaleAnimation);
                 Event event = eventList.get(position);
                 if (isChecked){
-                    event.setIsFavorite(true);
-                    favoritesList.add(event);
+                    addEvent(event, favoritesList);
                 }
                 else {
-                    event.setIsFavorite(false);
-                    favoritesList.remove(event);
+                    removeWithID(event.getId(), favoritesList);
                 }
-                storeEvents((ArrayList<Event>) eventList, context, FULL_LIST);
+                // Create/Update shared preference for favorites list
                 storeEvents(favoritesList, context, FAVORITES_LIST);
             }
         });
     }
 
+    private void removeWithID(String id, ArrayList<Event> favorites){
+        for (int i =0; i < favorites.size(); i++) {
+            if (favorites.get(i).getId().equals(id)) {
+                favorites.remove(i);
+            }
+        }
+    }
+
+    private void addEvent (Event event, ArrayList<Event> favorites){
+        for (Event e: favorites){
+            if (e.getId().equals(event.getId())){
+                return;
+            }
+        }
+        favorites.add(event);
+    }
+
+    /**
+     *
+     * @return int : The size of list of events
+     */
     @Override
     public int getItemCount() {
         return eventList.size();
     }
 
 
+    /**
+     * ViewHolder class that holds all the views for a particular row in the recycler view
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView tvMonthText;
-            public TextView tvDayText;
-            public TextView tvEventName;
-            public TextView tvEventTime;
-            public TextView tvEventLocation;
-            public ToggleButton favorites;
+            private TextView tvMonthText;
+            private TextView tvDayText;
+            private TextView tvEventName;
+            private TextView tvEventTime;
+            private TextView tvEventLocation;
+            private ToggleButton favorites;
 
-            public ViewHolder(View itemView) {
+            private ViewHolder(View itemView) {
                 super(itemView);
 
                 tvMonthText = itemView.findViewById(R.id.tvMonthText);

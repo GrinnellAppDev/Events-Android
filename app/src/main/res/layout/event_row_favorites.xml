@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/vEventBackground"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_margin="5dp"
+        android:visibility="visible"
+        android:background="@color/colorScarlet"/>
+
+    <LinearLayout
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignTop="@id/vEventBackground"
+        android:layout_alignEnd="@+id/vEventBackground"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMonthText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textColor="#FFFFFF"
+            android:text="FEB"/>
+
+        <TextView
+            android:id="@+id/tvDayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:text="15"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvEventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/vEventBackground"
+        android:layout_marginLeft="5dp"
+        android:textSize="20sp"
+        android:text="Event jgas wjhwjhd wd jhwd "
+        android:textColor="@color/colorBlack"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="800dp"/>
+
+    <TextView
+        android:id="@+id/tvEventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/vEventBackground"
+        android:layout_marginStart="5dp"
+        android:layout_below="@id/tvEventName"
+        android:textSize="15sp"
+        android:text="Time"/>
+
+    <TextView
+        android:id="@+id/tvEventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/vEventBackground"
+        android:layout_marginStart="5dp"
+        android:layout_below="@id/tvEventTime"
+        android:textSize="15sp"
+        android:text="Location"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="275dp"
+        />
+
+
+</RelativeLayout>

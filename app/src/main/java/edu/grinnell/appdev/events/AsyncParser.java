@@ -45,13 +45,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     }
 
     /**
-     *
-     * @return eventList A list that contains all the events
+     * Creates a dialog box indicating the user that the data is being downloaded
      */
-    public List<Event> getEventList() {
-        return eventList;
-    }
-
     @Override
     protected void onPreExecute(){
         progressDialog = new ProgressDialog(activity);
@@ -59,12 +54,13 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         progressDialog.setMessage("Downloading data");
         progressDialog.show();
     }
+
     //The method is supposed to parse the XML string that is passed as an argument
     @Override
     protected Integer doInBackground(String... strings) {
-        XmlPullParserFactory factory = null;
-        XmlPullParser xpp = null;
-        int eventType = 0;
+        XmlPullParserFactory factory;
+        XmlPullParser xpp;
+        int eventType;
         try {
             factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -81,22 +77,13 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = xpp.getName();
             switch (eventType) {
-                //Case where the parser finds an event start tag
-                case XmlPullParser.START_TAG:
-                    if (tagName.equalsIgnoreCase("entry")) {
-                        //event = new Event();
-                        event.setIsFavorite(false);
-                    }
-                    break;
                 //Case where the parser finds core information about an event
                 case XmlPullParser.TEXT:
                     text = xpp.getText();
                     break;
                 //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
-                    if (tagName.equalsIgnoreCase("entry")) {
-                        //eventList.add(event);
-                    } else if (tagName.equalsIgnoreCase("title")) {
+                    if (tagName.equalsIgnoreCase("title")) {
                         event.setTitle(text);
                     } else if (tagName.equalsIgnoreCase("id")) {
                         event = new Event();
@@ -134,7 +121,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private Integer parseContent(String content) {
 
         //Add email
-        Document doc= (Document) Jsoup.parse(content);
+        Document doc= Jsoup.parse(content);
         Element email = doc.select("a").last();
         event.setEmail(email.text());
 
@@ -173,7 +160,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param input Time that needs to be added minutes
      * @return Str Time represented in a string format
      */
-    public static String addMinutes(String input) {
+    private static String addMinutes(String input) {
         // Save the am/pm part of the string (last two digits)
         String ampm = input.substring(input.length() - 2, input.length());
 
@@ -196,7 +183,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param year The year that the event starts and ends
      * @return strings formatted start and end times
      */
-    public static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek,
+    private static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek,
                                                     String endDayOfWeek,String month,
                                                     String endMonth, String dayOfMonth,
                                                     String endDayOfMonth, String year){

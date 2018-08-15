@@ -16,10 +16,7 @@ public class Event {
     private Date endTime;
     private String email;
     private String organizer;
-    private boolean isFavorite;
     private String id;
-
-
 
     public void setTitle(String title) {this.title = title;}
 
@@ -34,8 +31,6 @@ public class Event {
     public void setEmail(String email) {this.email = email;}
 
     public void setOrganizer(String organizer) {this.organizer = organizer;}
-
-    public void setIsFavorite(boolean choice) {this.isFavorite = choice;}
 
     public void setID(String id) {this.id = id;}
 
@@ -52,8 +47,6 @@ public class Event {
     public String getEmail() { return email; }
 
     public String getOrganizer() { return organizer; }
-
-    public boolean getIsFavorite() {return isFavorite; }
 
     public String getId() {return id;}
 }

@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -17,8 +17,8 @@ import android.view.ViewGroup;
  */
 public class FragmentFavorites extends Fragment {
 
-    public FavoritesRecyclerViewAdapter recyclerViewAdapter;
-
+    private RecyclerView recyclerView;
+    private TextView emptyView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,12 +27,17 @@ public class FragmentFavorites extends Fragment {
         return inflater.inflate(R.layout.fragment_favorites, container, false);
     }
 
+    /**
+     *
+     * @param activity Activity in which the recycler view resides
+     */
     public void configureRecyclerView(Activity activity){
-        RecyclerView recyclerView = getView().findViewById(R.id.favorites_recycler);
+
         recyclerView.hasFixedSize();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
+        FavoritesRecyclerViewAdapter recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
+        recyclerViewAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -40,8 +45,17 @@ public class FragmentFavorites extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        configureRecyclerView(getActivity());
-        Log.d("recycler configured", "onViewCreated: ");
+        recyclerView = getView().findViewById(R.id.favorites_recycler);
+        emptyView = getView().findViewById(R.id.empty_view);
+        if (!MainActivity.favoritesList.isEmpty()) {
+            configureRecyclerView(getActivity());
+            recyclerView.setVisibility(getView().VISIBLE);
+            emptyView.setVisibility(getView().GONE);
+        }
+        else {
+            recyclerView.setVisibility(getView().GONE);
+            emptyView.setVisibility(getView().VISIBLE);
+        }
     }
 
 

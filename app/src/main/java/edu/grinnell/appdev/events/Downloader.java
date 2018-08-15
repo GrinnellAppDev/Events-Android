@@ -30,6 +30,9 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
         this.activity = activity;
     }
 
+    /**
+     * Creates a dialog box indicating the user that the data is being downloaded
+     */
     @Override
     protected void onPreExecute(){
         progressDialog = new ProgressDialog(activity);

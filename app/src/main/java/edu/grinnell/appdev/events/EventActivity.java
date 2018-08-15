@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import static android.provider.CalendarContract.Events;
@@ -43,13 +44,18 @@ public class EventActivity extends AppCompatActivity{
 
         }
 
-        private ArrayList<String> getEventInfo(){
+
+    /**
+     *
+     * @return ret : A list that contains the info about the start time of the event
+     */
+    private ArrayList<String> getEventInfo(){
             ArrayList<String> ret = new ArrayList<>();
-            final String month = new SimpleDateFormat("MMM").format(eventData.getStartTime());
-            final String day = new SimpleDateFormat("dd").format(eventData.getStartTime());
-            final String hour = new SimpleDateFormat("hh").format(eventData.getStartTime());
-            final String minutes = new SimpleDateFormat("mm").format(eventData.getStartTime());
-            final String year = new SimpleDateFormat("yyyy").format(eventData.getStartTime());
+            final String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
+            final String day = new SimpleDateFormat("dd", Locale.US).format(eventData.getStartTime());
+            final String hour = new SimpleDateFormat("hh", Locale.US).format(eventData.getStartTime());
+            final String minutes = new SimpleDateFormat("mm", Locale.US).format(eventData.getStartTime());
+            final String year = new SimpleDateFormat("yyyy", Locale.US).format(eventData.getStartTime());
 
             ret.add(year);
             ret.add(month);
@@ -60,26 +66,32 @@ public class EventActivity extends AppCompatActivity{
             return ret;
         }
 
-        private void setView() {
+    /**
+     * Set up the view for the expanded event
+     */
+    private void setView() {
             //Begin time
             ArrayList<String> eventInfo = getEventInfo();
 
 
+            // Parse the list to get specific elements of the start time
             String month = eventInfo.get(1);
             String day = eventInfo.get(2);
             String hour = eventInfo.get(3);
             String minutes = eventInfo.get(4);
-            String ampm = new SimpleDateFormat("aa").format(eventData.getStartTime());
-            String dayName = new SimpleDateFormat("EEEE").format(eventData.getStartTime());
+            String ampm = new SimpleDateFormat("aa", Locale.US).format(eventData.getStartTime());
+            String dayName = new SimpleDateFormat("EEEE", Locale.US).format(eventData.getStartTime());
 
+            // Get it to display the right format
             String startTime = hour + ":" + minutes + " " + ampm;
 
 
             final String title = eventData.getTitle();
-            String content = eventData.getContent();
+            final String content = eventData.getContent();
             final String location = eventData.getLocation();
-            String email = eventData.getEmail();
+            final String email = eventData.getEmail();
 
+            // Add elements to the text view
             TextView tvMonthText = findViewById(R.id.tvMonthText);
             TextView tvDayText = findViewById(R.id.tvDayText);
             TextView tvEventName = findViewById(R.id.tvEventName);
@@ -96,15 +108,20 @@ public class EventActivity extends AppCompatActivity{
             tvContent.setText(content);
             tvEmail.setText(email);
 
-
+            //Button responsible for adding events to the calender
             Button calenderBtn = findViewById(R.id.Calender);
             calenderBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(EventActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR}, Constants.PERMISSIONS_REQUEST);
+                    // Ask for permission from the user to access the calender app
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                                Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(EventActivity.this,
+                                    new String[]{Manifest.permission.WRITE_CALENDAR},
+                                    Constants.PERMISSIONS_REQUEST);
                     }
+                    // Permission has already been granted previously
                     else {
                         insertEvent();
                     }
@@ -115,6 +132,9 @@ public class EventActivity extends AppCompatActivity{
 
         }
 
+    /**
+     * Add the event to the calender
+     */
     @SuppressLint("MissingPermission")
     private void insertEvent() {
 
@@ -127,16 +147,15 @@ public class EventActivity extends AppCompatActivity{
         String minutes = eventInfo.get(4);
 
         //End time
-        final String endMonth = new SimpleDateFormat("MMM").format(eventData.getEndTime());
-        final String endDay = new SimpleDateFormat("dd").format(eventData.getEndTime());
-        final String endHour = new SimpleDateFormat("hh").format(eventData.getEndTime());
-        final String endMinutes = new SimpleDateFormat("mm").format(eventData.getEndTime());
-        String endAmpm = new SimpleDateFormat("aa").format(eventData.getEndTime());
-        String endDayName = new SimpleDateFormat("EEEE").format(eventData.getEndTime());
-        final String endYear = new SimpleDateFormat("yyyy").format(eventData.getEndTime());
-        String title = eventData.getTitle();
-        String description = eventData.getContent();
+        final String endMonth = new SimpleDateFormat("MMM", Locale.US).format(eventData.getEndTime());
+        final String endDay = new SimpleDateFormat("dd", Locale.US).format(eventData.getEndTime());
+        final String endHour = new SimpleDateFormat("hh", Locale.US).format(eventData.getEndTime());
+        final String endMinutes = new SimpleDateFormat("mm", Locale.US).format(eventData.getEndTime());
+        final String endYear = new SimpleDateFormat("yyyy", Locale.US).format(eventData.getEndTime());
+        final String title = eventData.getTitle();
+        final String description = eventData.getContent();
 
+        // Initialze resolver responsible to insert content in a calender
         ContentResolver cr = getContentResolver();
         ContentValues values = new ContentValues();
 
@@ -146,13 +165,14 @@ public class EventActivity extends AppCompatActivity{
         Calendar beginTime = Calendar.getInstance(TimeZone.getTimeZone("Chicago"));
         Calendar cal = Calendar.getInstance();
         try {
-            Date date = new SimpleDateFormat("MMM").parse(month);
+            Date date = new SimpleDateFormat("MMM", Locale.US).parse(month);
             cal.setTime(date);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        beginTime.set(Integer.parseInt(year), cal.get(Calendar.MONTH), Integer.parseInt(day), Integer.parseInt(hour), Integer.parseInt(minutes));
+        beginTime.set(Integer.parseInt(year), cal.get(Calendar.MONTH), Integer.parseInt(day),
+                Integer.parseInt(hour), Integer.parseInt(minutes));
 
         Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("Chicago"));
         try {
@@ -162,7 +182,8 @@ public class EventActivity extends AppCompatActivity{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        endTime.set(Integer.parseInt(endYear), cal.get(Calendar.MONTH), Integer.parseInt(endDay), Integer.parseInt(endHour), Integer.parseInt(endMinutes));
+        endTime.set(Integer.parseInt(endYear), cal.get(Calendar.MONTH), Integer.parseInt(endDay),
+                Integer.parseInt(endHour), Integer.parseInt(endMinutes));
 
         //Need to change from default value
         values.put(Events.CALENDAR_ID, 3);
@@ -173,11 +194,18 @@ public class EventActivity extends AppCompatActivity{
         values.put(Events.EVENT_LOCATION, eventData.getLocation());
         values.put(Events.EVENT_TIMEZONE, String.valueOf(TimeZone.getTimeZone("Chicago")));
 
+        //Add it to the calender
         cr.insert(Events.CONTENT_URI, values);
         Toast.makeText(getApplicationContext(), "Event inserted!", Toast.LENGTH_SHORT).show();
 
     }
 
+    /**
+     *
+     * @param requestCode Integer returned by the permission handler for this specific permission
+     * @param permissions
+     * @param grantResults Returns the result according to the user's decision
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -189,9 +217,7 @@ public class EventActivity extends AppCompatActivity{
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Permission Denied!", Toast.LENGTH_LONG).show();
-                    // permission denied, boo!
                 }
-                return;
             }
 
         }
