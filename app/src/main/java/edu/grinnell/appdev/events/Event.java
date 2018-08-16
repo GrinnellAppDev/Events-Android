@@ -2,13 +2,14 @@ package edu.grinnell.appdev.events;
 
 import android.support.design.widget.BottomNavigationView;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents an event model. An event object holds the
  * information about any specific event that is posted on the Grinnell Calender
  */
-public class Event {
+public class Event implements Serializable{
     private String title;
     private String content;
     private String location;

@@ -4,21 +4,28 @@ package edu.grinnell.appdev.events;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentFavorites extends Fragment {
+public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private RecyclerView recyclerView;
     private TextView emptyView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,8 +44,31 @@ public class FragmentFavorites extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
         FavoritesRecyclerViewAdapter recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
-        recyclerViewAdapter.notifyDataSetChanged();
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+
+    }
+
+    public static void removeWithID(String id, ArrayList<Event> favorites){
+        for (int i =0; i < favorites.size(); i++) {
+            if (favorites.get(i).getId().equals(id)) {
+                favorites.remove(i);
+            }
+        }
+    }
+
+    public static void addEvent (Event event, ArrayList<Event> favorites){
+        for (Event e: favorites){
+            if (e.getId().equals(event.getId())){
+                return;
+            }
+        }
+        favorites.add(event);
     }
 
     @Override
@@ -47,16 +77,22 @@ public class FragmentFavorites extends Fragment {
 
         recyclerView = getView().findViewById(R.id.favorites_recycler);
         emptyView = getView().findViewById(R.id.empty_view);
+
+
         if (!MainActivity.favoritesList.isEmpty()) {
             configureRecyclerView(getActivity());
-            recyclerView.setVisibility(getView().VISIBLE);
             emptyView.setVisibility(getView().GONE);
+            recyclerView.setVisibility(getView().VISIBLE);
         }
         else {
-            recyclerView.setVisibility(getView().GONE);
             emptyView.setVisibility(getView().VISIBLE);
+            recyclerView.setVisibility(getView().GONE);
         }
     }
 
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        removeWithID(MainActivity.favoritesList.get(position).getId(), MainActivity.favoritesList);
+    }
 }

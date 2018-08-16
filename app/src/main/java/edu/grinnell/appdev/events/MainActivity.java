@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private String xmlData;
     public static List<Event> eventList;
     public static ArrayList<Event> favoritesList;
+
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
@@ -44,10 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        homeFragment = new FragmentHome();
-        searchFragment = new FragmentSearch();
-        favoritesFragment = new FragmentFavorites();
-
+        initializeFragments();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
@@ -67,6 +65,15 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
 
         setUpMainActivityUI();
+
+    }
+
+    private void initializeFragments(){
+        homeFragment = new FragmentHome();
+        searchFragment = new FragmentSearch();
+        favoritesFragment = new FragmentFavorites();
+
+        Bundle home_frag_args = new Bundle();
 
     }
 

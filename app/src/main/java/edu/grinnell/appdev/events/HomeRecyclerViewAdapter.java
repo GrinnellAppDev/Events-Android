@@ -163,10 +163,10 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
                 compoundButton.startAnimation(scaleAnimation);
                 Event event = eventList.get(position);
                 if (isChecked){
-                    addEvent(event, favoritesList);
+                    FragmentFavorites.addEvent(event, favoritesList);
                 }
                 else {
-                    removeWithID(event.getId(), favoritesList);
+                    FragmentFavorites.removeWithID(event.getId(), favoritesList);
                 }
                 // Create/Update shared preference for favorites list
                 storeEvents(favoritesList, context, FAVORITES_LIST);
@@ -174,22 +174,6 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
         });
     }
 
-    private void removeWithID(String id, ArrayList<Event> favorites){
-        for (int i =0; i < favorites.size(); i++) {
-            if (favorites.get(i).getId().equals(id)) {
-                favorites.remove(i);
-            }
-        }
-    }
-
-    private void addEvent (Event event, ArrayList<Event> favorites){
-        for (Event e: favorites){
-            if (e.getId().equals(event.getId())){
-                return;
-            }
-        }
-        favorites.add(event);
-    }
 
     /**
      *

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -52,12 +53,13 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
         return favoritesList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvMonthText;
         public TextView tvDayText;
         public TextView tvEventName;
         public TextView tvEventTime;
         public TextView tvEventLocation;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
