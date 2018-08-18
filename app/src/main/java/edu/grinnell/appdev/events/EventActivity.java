@@ -35,10 +35,9 @@ public class EventActivity extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             // Get the view from new_activity.xml
             setContentView(R.layout.activity_individual_event);
-            Intent mIntent = getIntent();
-            int eventNo = mIntent.getIntExtra("eventNo", 0);
-
-            eventData = MainActivity.eventList.get(eventNo);
+            eventData = getIntent().getParcelableExtra("Event");
+            eventData.setStartTime(new Date(eventData.getStartTimeNew()));
+            eventData.setEndTime(new Date(eventData.getEndTimeNew()));
 
             setView();
 

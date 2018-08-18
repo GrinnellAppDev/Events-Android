@@ -4,10 +4,10 @@ package edu.grinnell.appdev.events;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,8 @@ import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -28,15 +30,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
-import static edu.grinnell.appdev.events.MainActivity.eventList;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 
 
-public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.ViewHolder> {
+public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.ViewHolder> implements Filterable{
 
     private Context context;
     private ArrayList<Event> eventArrayList;
+    private ArrayList<Event> filteredList;
 
     /**
      *
@@ -45,6 +47,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
     HomeRecyclerViewAdapter(Context context, ArrayList<Event> eventArrayList){
         this.context = context;
         this.eventArrayList = eventArrayList;
+        this.filteredList = eventArrayList;
         favoritesList = new ArrayList<>();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String favStr = sharedPrefs.getString(FAVORITES_LIST, null);
@@ -71,9 +74,8 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
     private void configureView(ViewHolder holder, int position){
 
         //final Event eventData = eventList.get(position);
-        final Event eventData = eventArrayList.get(position);
+        final Event eventData = filteredList.get(position);
 
-        //eventData.setStartTime(new SimpleDateFormat(eventData.getStartTimeNew()));
         eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
         String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
@@ -102,9 +104,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, EventActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("eventNo", position);
-                intent.putExtras(b);
+                intent.putExtra("Event", eventArrayList.get(position));
                 context.startActivity(intent);
             }
         });
@@ -155,12 +155,6 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
         holder.favorites.setChecked(false);
 
         //Restore state of toggle button while scrolling and refreshing the data
-        /*if (eventList != null) {
-            Event event = eventList.get(position);
-            if (containsID(event.getId(), favoritesList)){
-                holder.favorites.setChecked(true);
-            }
-        }*/
         if (eventArrayList != null) {
             Event event = eventArrayList.get(position);
             if (containsID(event.getId(), favoritesList)){
@@ -196,6 +190,40 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
     @Override
     public int getItemCount() {
         return eventArrayList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String query = constraint.toString();
+
+                if (query.isEmpty()){
+                    filteredList = eventArrayList;
+                }
+                else {
+                    ArrayList<Event> tempFilteredList = new ArrayList<>();
+                    for (Event event: eventArrayList){
+                        if (event.getTitle().contains(constraint)|| event.getContent().contains(constraint)){
+                            tempFilteredList.add(event);
+                        }
+                    }
+                    filteredList = tempFilteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                filteredList = (ArrayList<Event>) results.values;
+                Log.d("published result", filteredList.toString());
+                notifyDataSetChanged();
+            }
+        };
     }
 
 

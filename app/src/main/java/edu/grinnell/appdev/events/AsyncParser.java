@@ -94,18 +94,11 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
                     if (tagName.equalsIgnoreCase("title")) {
-                        //event.setTitle(text);
                         title = text;
                     } else if (tagName.equalsIgnoreCase("id")) {
-                        //event = new Event();
-                        //event.setID(text);
                         id = text;
                     } else if (tagName.equalsIgnoreCase("content")) {
-                        //event.setContent(text);
-                        content = text;
                         parseContent(text);
-                        //if (event.getStartTime() != null){
-                            //eventList.add(event);
                             event = new Event(title, content, evlocation, startTime, endTime, orgEmail, "Hohn Smith", id);
                             eventList.add(event);
                     }
@@ -137,7 +130,6 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         //Add email
         Document doc= Jsoup.parse(content);
         Element email = doc.select("a").last();
-        //event.setEmail(email.text());
         orgEmail = email.text();
 
         //Convert to XHTML into parsable format
@@ -147,12 +139,10 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
         //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
-            //event.setContent(description);
-            content = description;
+            this.content = description;
 
             //Location of the event
             String location = arr[0];
-            //event.setLocation(location);
             evlocation = location;
 
             //Start and end date for the events
@@ -307,8 +297,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(0));
             Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(1));
 
-            //event.setStartTime(start);
-            //event.setEndTime(end);
+            //Store the date as Long for parcelable
             if (start != null) {
                 startTime = start.getTime();
                 endTime = end.getTime();

@@ -32,17 +32,6 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
         }
     }
 
-    /*@Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE && isCurrentlyActive) {
-            View foreground = viewHolder.itemView.findViewById(R.id.view_foreground);
-
-            foreground.setTranslationX(dX);
-        }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-    }*/
-
-
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView,
                             RecyclerView.ViewHolder viewHolder, float dX, float dY,

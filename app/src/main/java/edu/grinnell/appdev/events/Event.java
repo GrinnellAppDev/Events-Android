@@ -17,8 +17,8 @@ public class Event implements Parcelable{
     private String location;
     private Date startTime;
     private Date endTime;
-    private Long startTimeNew;
-    private Long endTimeNew;
+    private Long startTimeMillis;
+    private Long endTimeNewMillis;
     private String email;
     private String organizer;
     private String id;
@@ -29,8 +29,8 @@ public class Event implements Parcelable{
         this.title = title;
         this.content = content;
         this.location = location;
-        this.startTimeNew = startTime;
-        this.endTimeNew = endTime;
+        this.startTimeMillis = startTime;
+        this.endTimeNewMillis = endTime;
         this.email = email;
         this.id = id;
     }
@@ -42,7 +42,8 @@ public class Event implements Parcelable{
         email = in.readString();
         organizer = in.readString();
         id = in.readString();
-
+        startTimeMillis = in.readLong();
+        endTimeNewMillis = in.readLong();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -77,9 +78,9 @@ public class Event implements Parcelable{
 
     public Date getEndTime() {return this.endTime;}
 
-    public Long getStartTimeNew() {return this.startTimeNew;}
+    public Long getStartTimeNew() {return this.startTimeMillis;}
 
-    public Long getEndTimeNew() {return this.endTimeNew;}
+    public Long getEndTimeNew() {return this.endTimeNewMillis;}
 
     public String getTitle() {return title;}
 
@@ -106,7 +107,7 @@ public class Event implements Parcelable{
         dest.writeString(email);
         dest.writeString(organizer);
         dest.writeString(id);
-        dest.writeLong(startTime.getTime());
-        dest.writeLong(endTime.getTime());
+        dest.writeLong(startTimeMillis);
+        dest.writeLong(endTimeNewMillis);
     }
 }

@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         searchFragment = new FragmentSearch();
         favoritesFragment = new FragmentFavorites();
 
-        Bundle home_frag_args = new Bundle();
-
     }
 
     void bottomNavigationViewInitialize(BottomNavigationView bottomNavigationView){
@@ -179,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.action_button, menu);
+        getMenuInflater().inflate(R.menu.search_list, menu);
+        homeFragment.setUpSearch(menu);
         return true;
     }
 
@@ -186,11 +186,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            onBackPressed();  return true;
+        if (id == R.id.action_refresh) {
+            deleteSharedPreferencesFile(FULL_LIST);
+            this.recreate();
         }
-        deleteSharedPreferencesFile(FULL_LIST);
-        this.recreate();
+        else if (id == R.id.menu_search){
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

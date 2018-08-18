@@ -4,4 +4,5 @@
     <string name="search_hint">Search events</string>
     <string name="empty_favorites">No favorite selected yet</string>
     <string name="delete">delete</string>
+    <string name="action_search">Search</string>
 </resources>
