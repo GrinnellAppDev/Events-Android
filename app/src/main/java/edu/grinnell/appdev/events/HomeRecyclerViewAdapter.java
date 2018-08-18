@@ -73,7 +73,6 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
      */
     private void configureView(ViewHolder holder, int position){
 
-        //final Event eventData = eventList.get(position);
         final Event eventData = filteredList.get(position);
 
         eventData.setStartTime(new Date(eventData.getStartTimeNew()));
@@ -168,7 +167,6 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
-                //Event event = eventList.get(position);
                 Event event = eventArrayList.get(position);
                 if (isChecked){
                     FragmentFavorites.addEvent(event, favoritesList);
@@ -189,7 +187,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
      */
     @Override
     public int getItemCount() {
-        return eventArrayList.size();
+        return filteredList == null ? 0 : filteredList.size();
     }
 
     @Override
@@ -205,7 +203,8 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
                 else {
                     ArrayList<Event> tempFilteredList = new ArrayList<>();
                     for (Event event: eventArrayList){
-                        if (event.getTitle().contains(constraint)|| event.getContent().contains(constraint)){
+                        if (event.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())
+                                || event.getContent().toLowerCase().contains(constraint.toString().toLowerCase())){
                             tempFilteredList.add(event);
                         }
                     }
@@ -220,7 +219,6 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filteredList = (ArrayList<Event>) results.values;
-                Log.d("published result", filteredList.toString());
                 notifyDataSetChanged();
             }
         };

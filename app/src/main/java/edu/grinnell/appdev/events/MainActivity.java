@@ -2,9 +2,7 @@ package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -15,23 +13,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
-    public static List<Event> eventList;
+    public List<Event> eventList;
     public static ArrayList<Event> favoritesList;
 
 
@@ -39,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
     public static SharedPreferences shared;
+    BottomNavigationView bottomNavigationView;
 
     public static final String FULL_LIST = "FULL_LIST";
     public static final String FAVORITES_LIST = "FAVORITES_LST";
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             eventList = gson.fromJson(json, type); //Restore previous data
             initializeFragments();
             addBundleArgs();
-            Toast.makeText(this, "Data restored from cache", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Data restored from local device", Toast.LENGTH_SHORT).show();
             setFragment(homeFragment);
         }
         else {
@@ -143,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         initializeFragments();
         addBundleArgs();
         setFragment(homeFragment);
+        Toast.makeText(this, "Downloaded the latest data", Toast.LENGTH_SHORT).show();
         storeEvents((ArrayList<Event>) eventList, this, FULL_LIST);
     }
 
@@ -174,21 +171,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.action_button, menu);
-        getMenuInflater().inflate(R.menu.search_list, menu);
-        homeFragment.setUpSearch(menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
             deleteSharedPreferencesFile(FULL_LIST);
             this.recreate();
+            return true;
         }
         else if (id == R.id.menu_search){
             return true;
@@ -205,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     }
 
     public void setUpMainActivityUI(){
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+        bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 
         bottomNavigationViewInitialize(bottomNavigationView);

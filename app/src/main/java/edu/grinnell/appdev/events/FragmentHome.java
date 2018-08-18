@@ -14,6 +14,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +30,7 @@ public class FragmentHome extends Fragment {
 
     public HomeRecyclerViewAdapter recyclerViewAdapter;
     public ArrayList<Event> eventArrayList;
+    private Activity activity;
 
     public FragmentHome(){
 
@@ -40,7 +42,7 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         eventArrayList = getArguments().getParcelableArrayList("Event list");
-        Log.d("frag home", eventArrayList+"");
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -66,9 +68,15 @@ public class FragmentHome extends Fragment {
 
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        this.activity = getActivity();
+    }
+
     public void setUpSearch(Menu menu){
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
                 .getActionView();
         searchView.setSearchableInfo(searchManager
@@ -91,6 +99,14 @@ public class FragmentHome extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.action_button, menu);
+        inflater.inflate(R.menu.search_list, menu);
+        setUpSearch(menu);
     }
 
 
