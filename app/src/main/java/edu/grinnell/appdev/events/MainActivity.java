@@ -2,9 +2,11 @@ package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public static List<Event> eventList;
     public static ArrayList<Event> favoritesList;
 
+
     private FragmentHome homeFragment;
     private FragmentSearch searchFragment;
     private FragmentFavorites favoritesFragment;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeFragments();
+        //initializeFragments();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
@@ -54,15 +57,15 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
             Gson gson = new Gson();
             eventList = gson.fromJson(json, type); //Restore previous data
+            initializeFragments();
+            addBundleArgs();
             Toast.makeText(this, "Data restored from cache", Toast.LENGTH_SHORT).show();
             setFragment(homeFragment);
         }
         else {
             //Downloading the XML through a separate thread
             downloadContent();
-
         }
-
 
         setUpMainActivityUI();
 
@@ -139,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onParseComplete(List<Event> completeEventList) {
         eventList = completeEventList;
+        initializeFragments();
+        addBundleArgs();
         setFragment(homeFragment);
         storeEvents((ArrayList<Event>) eventList, this, FULL_LIST);
     }
@@ -151,6 +156,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     @Override
     public void onParseFail(String failMsg) {
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void addBundleArgs (){
+        Bundle bundle = new Bundle();
+        Log.d("event before bundle", eventList.toString());
+        bundle.putParcelableArrayList("Event list", (ArrayList<? extends Parcelable>) eventList);
+        homeFragment.setArguments(bundle);
     }
 
     public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String filename){

@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
@@ -35,13 +36,15 @@ import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
+    private ArrayList<Event> eventArrayList;
 
     /**
      *
      * @param context A context field required to store in shared preference
      */
-    HomeRecyclerViewAdapter(Context context){
+    HomeRecyclerViewAdapter(Context context, ArrayList<Event> eventArrayList){
         this.context = context;
+        this.eventArrayList = eventArrayList;
         favoritesList = new ArrayList<>();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String favStr = sharedPrefs.getString(FAVORITES_LIST, null);
@@ -67,7 +70,11 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
      */
     private void configureView(ViewHolder holder, int position){
 
-        final Event eventData = eventList.get(position);
+        //final Event eventData = eventList.get(position);
+        final Event eventData = eventArrayList.get(position);
+
+        //eventData.setStartTime(new SimpleDateFormat(eventData.getStartTimeNew()));
+        eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
         String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
         String day = new SimpleDateFormat("dd", Locale.US).format(eventData.getStartTime());
@@ -148,8 +155,14 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
         holder.favorites.setChecked(false);
 
         //Restore state of toggle button while scrolling and refreshing the data
-        if (eventList != null) {
+        /*if (eventList != null) {
             Event event = eventList.get(position);
+            if (containsID(event.getId(), favoritesList)){
+                holder.favorites.setChecked(true);
+            }
+        }*/
+        if (eventArrayList != null) {
+            Event event = eventArrayList.get(position);
             if (containsID(event.getId(), favoritesList)){
                 holder.favorites.setChecked(true);
             }
@@ -161,7 +174,8 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
-                Event event = eventList.get(position);
+                //Event event = eventList.get(position);
+                Event event = eventArrayList.get(position);
                 if (isChecked){
                     FragmentFavorites.addEvent(event, favoritesList);
                 }
@@ -181,7 +195,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
      */
     @Override
     public int getItemCount() {
-        return eventList.size();
+        return eventArrayList.size();
     }
 
 

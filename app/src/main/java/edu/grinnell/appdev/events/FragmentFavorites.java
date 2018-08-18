@@ -16,6 +16,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
+import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.MainActivity.favoritesList;
+import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 
 
 /**
@@ -25,7 +28,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
 
     private RecyclerView recyclerView;
     private TextView emptyView;
-
+    private FavoritesRecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +46,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         recyclerView.hasFixedSize();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        FavoritesRecyclerViewAdapter recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
+        recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
 
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -94,5 +97,12 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         removeWithID(MainActivity.favoritesList.get(position).getId(), MainActivity.favoritesList);
+        storeEvents(favoritesList, getContext(), FAVORITES_LIST);
+        recyclerViewAdapter.notifyItemRemoved(position);
+
+        if(favoritesList.isEmpty()){
+            emptyView.setVisibility(getView().VISIBLE);
+            recyclerView.setVisibility(getView().GONE);
+        }
     }
 }

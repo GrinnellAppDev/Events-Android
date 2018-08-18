@@ -3,6 +3,7 @@ package edu.grinnell.appdev.events;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Parcel;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -38,6 +39,15 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private onParseComplete mOnParseComplete;
     private ProgressDialog progressDialog;
     private Activity activity;
+
+    private String title;
+    private String content;
+    private String evlocation;
+    private Long startTime;
+    private Long endTime;
+    private String orgEmail;
+    private String organizer;
+    private String id;
 
     AsyncParser (Activity activity) {
         this.mOnParseComplete = (onParseComplete) activity;
@@ -84,16 +94,20 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
                     if (tagName.equalsIgnoreCase("title")) {
-                        event.setTitle(text);
+                        //event.setTitle(text);
+                        title = text;
                     } else if (tagName.equalsIgnoreCase("id")) {
-                        event = new Event();
-                        event.setID(text);
+                        //event = new Event();
+                        //event.setID(text);
+                        id = text;
                     } else if (tagName.equalsIgnoreCase("content")) {
-                        event.setContent(text);
+                        //event.setContent(text);
+                        content = text;
                         parseContent(text);
-                        if (event.getStartTime() != null){
+                        //if (event.getStartTime() != null){
+                            //eventList.add(event);
+                            event = new Event(title, content, evlocation, startTime, endTime, orgEmail, "Hohn Smith", id);
                             eventList.add(event);
-                        }
                     }
                     break;
 
@@ -123,11 +137,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         //Add email
         Document doc= Jsoup.parse(content);
         Element email = doc.select("a").last();
-        event.setEmail(email.text());
-
-        //Element sub = doc.select("S").last();
-        Element sub = doc.getElementsByAttributeStarting("b").first();
-        //Log.d("content", doc.html(content).toString());
+        //event.setEmail(email.text());
+        orgEmail = email.text();
 
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
@@ -136,11 +147,13 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
         //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
-            event.setContent(description);
+            //event.setContent(description);
+            content = description;
 
             //Location of the event
             String location = arr[0];
-            event.setLocation(location);
+            //event.setLocation(location);
+            evlocation = location;
 
             //Start and end date for the events
             String date = arr[1];
@@ -294,8 +307,12 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(0));
             Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(1));
 
-            event.setStartTime(start);
-            event.setEndTime(end);
+            //event.setStartTime(start);
+            //event.setEndTime(end);
+            if (start != null) {
+                startTime = start.getTime();
+                endTime = end.getTime();
+            }
         }
     }
 

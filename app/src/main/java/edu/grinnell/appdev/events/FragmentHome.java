@@ -24,6 +24,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 public class FragmentHome extends Fragment {
 
     public HomeRecyclerViewAdapter recyclerViewAdapter;
+    public ArrayList<Event> eventArrayList;
 
     public FragmentHome(){
 
@@ -34,6 +35,8 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        eventArrayList = getArguments().getParcelableArrayList("Event list");
+        Log.d("frag home", eventArrayList+"");
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -44,7 +47,7 @@ public class FragmentHome extends Fragment {
         recyclerView.hasFixedSize();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewAdapter = new HomeRecyclerViewAdapter(activity);
+        recyclerViewAdapter = new HomeRecyclerViewAdapter(activity, eventArrayList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(recyclerViewAdapter);
     }
