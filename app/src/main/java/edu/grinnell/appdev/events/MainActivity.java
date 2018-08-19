@@ -13,6 +13,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -196,12 +198,18 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             this.recreate();
             return true;
         }
-        else if (id == R.id.menu_calender){
+        else if(id == R.id.action_settings){
+            Toast.makeText(this, "yet to be implemented", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else if (id == R.id.action_help){
+            Toast.makeText(this, "yet to be implemented", Toast.LENGTH_LONG).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      *

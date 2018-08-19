@@ -104,8 +104,8 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.action_button, menu);
         inflater.inflate(R.menu.search_list, menu);
+        inflater.inflate(R.menu.overflow, menu);
         setUpSearch(menu);
     }
 
