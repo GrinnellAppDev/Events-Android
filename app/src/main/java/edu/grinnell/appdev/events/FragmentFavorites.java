@@ -1,17 +1,26 @@
 package edu.grinnell.appdev.events;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +28,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.storeEvents;
+import static edu.grinnell.appdev.events.R.id.coordinator_layout;
 
 
 /**
@@ -29,6 +39,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
     private RecyclerView recyclerView;
     private TextView emptyView;
     private FavoritesRecyclerViewAdapter recyclerViewAdapter;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,13 +86,13 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      * @param event Event object to be added
      * @param favorites List in which event object is added
      */
-    public static void addEvent (Event event, ArrayList<Event> favorites){
+    public static void addEvent (Event event, ArrayList<Event> favorites, int position){
         for (Event e: favorites){
             if (e.getId().equals(event.getId())){
                 return;
             }
         }
-        favorites.add(event);
+        favorites.add(position, event);
     }
 
     @Override
@@ -91,7 +102,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         recyclerView = getView().findViewById(R.id.favorites_recycler);
         emptyView = getView().findViewById(R.id.empty_view);
 
-        //Decided which view to show depending on if the list is empty or not
+        //Decide which view to show depending on if the list is empty or not
         if (!MainActivity.favoritesList.isEmpty()) {
             configureRecyclerView(getActivity());
             emptyView.setVisibility(getView().GONE);
@@ -101,6 +112,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
             emptyView.setVisibility(getView().VISIBLE);
             recyclerView.setVisibility(getView().GONE);
         }
+        coordinatorLayout = getView().findViewById(R.id.frag_fav_cl);
     }
 
     /**
@@ -110,14 +122,45 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      * @param position
      */
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        removeWithID(MainActivity.favoritesList.get(position).getId(), MainActivity.favoritesList);
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, final int position) {
+        Event itemRemoved = MainActivity.favoritesList.get(position);
+        removeWithID(itemRemoved.getId(), MainActivity.favoritesList);
         storeEvents(favoritesList, getContext(), FAVORITES_LIST);
         recyclerViewAdapter.notifyItemRemoved(position);
+
+        displaySnackBarWithBottomMargin(position, itemRemoved);
 
         if(favoritesList.isEmpty()){
             emptyView.setVisibility(getView().VISIBLE);
             recyclerView.setVisibility(getView().GONE);
         }
+    }
+    public void displaySnackBarWithBottomMargin(final int position, final Event event) {
+
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Event removed from the List",Snackbar.LENGTH_SHORT);
+        final View snackBarView = snackbar.getView();
+        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackBarView.getLayoutParams();
+
+        params.setMargins(params.leftMargin,
+                params.topMargin,
+                params.rightMargin,
+                params.bottomMargin + actionBarHeight);
+
+        snackBarView.setLayoutParams(params);
+        snackbar.setAction("UNDO!", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addEvent(event, favoritesList, position);
+                recyclerViewAdapter.notifyItemInserted(position);
+                storeEvents(favoritesList, getContext(), FAVORITES_LIST);
+            }
+        });
+        snackbar.show();
     }
 }

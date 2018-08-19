@@ -204,7 +204,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 Event event = eventArrayList.get(position);
                 //Update the favorites list
                 if (isChecked){
-                    FragmentFavorites.addEvent(event, favoritesList);
+                    FragmentFavorites.addEvent(event, favoritesList, favoritesList.size() - 1);
                 }
                 else {
                     FragmentFavorites.removeWithID(event.getId(), favoritesList);
