@@ -135,8 +135,15 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
             recyclerView.setVisibility(getView().GONE);
         }
     }
+
+    /**
+     *
+     * @param position Position to insert the deleted item
+     * @param event Event to be added back
+     */
     public void displaySnackBarWithBottomMargin(final int position, final Event event) {
 
+        // Get the margin for snackbar, which is equal to the height of the bottom navigation view
         TypedValue tv = new TypedValue();
         int actionBarHeight = 0;
         if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
@@ -147,6 +154,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         final View snackBarView = snackbar.getView();
         final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackBarView.getLayoutParams();
 
+        // Set the margin
         params.setMargins(params.leftMargin,
                 params.topMargin,
                 params.rightMargin,
