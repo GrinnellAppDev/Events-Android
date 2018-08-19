@@ -3,14 +3,10 @@ package edu.grinnell.appdev.events;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Parcel;
 import android.text.Html;
-import android.util.Log;
-import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,7 +26,9 @@ import static edu.grinnell.appdev.events.Constants.ERROR_PARSING;
 import static edu.grinnell.appdev.events.Constants.LENGTH_OF_XML_DECLARATION;
 import static edu.grinnell.appdev.events.Constants.SUCCESS;
 
-
+/**
+ * This class is responsible for parsing the XML string and creating a final events list
+ */
 public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
     private List<Event> eventList;
@@ -48,6 +46,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private String orgEmail;
     private String organizer;
     private String id;
+    private Date startTimeCurEvent;
+    private Date startTimePrevEvent;
 
     AsyncParser (Activity activity) {
         this.mOnParseComplete = (onParseComplete) activity;
@@ -99,8 +99,20 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                         id = text;
                     } else if (tagName.equalsIgnoreCase("content")) {
                         parseContent(text);
-                            event = new Event(title, content, evlocation, startTime, endTime, orgEmail, "Hohn Smith", id);
-                            eventList.add(event);
+
+                        //Adding row divided for each day in recycler view. Stored a an event object
+                        // with only one field
+                        if (startTimePrevEvent == null || startTimePrevEvent.before(startTimeCurEvent)){
+                            Event psedoEvent = new Event("", "", "",
+                                    startTimeCurEvent.getTime(), (long) 0, "", "",
+                                    "", 1);
+                            eventList.add(psedoEvent);
+                            startTimePrevEvent = startTimeCurEvent;
+                        }
+                        //Populate the event and add it to the list
+                        event = new Event(title, content, evlocation, startTime, endTime, orgEmail,
+                                "John Smith", id, 0);
+                        eventList.add(event);
                     }
                     break;
 
@@ -275,7 +287,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 unformattedTime = unformattedStartStr + " " + "-" + " " + unformattedEndStr;
 
                 //List that contains the standardized time
-                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month, endMonth, dayOfMonth, endDayofMonth,year);
+                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month,
+                        endMonth, dayOfMonth, endDayofMonth,year);
             }
             else {
                 //Saturday, April 21, 7am – Sunday, April 22, 2018, 1am
@@ -290,12 +303,19 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 unformattedTime = unformattedStartStr + " " + "-" + " " + unformattedEndStr;
 
                 //List that contains the standardized time
-                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month, endMonth, dayOfMonth, endDayofMonth,year);
+                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month,
+                        endMonth, dayOfMonth, endDayofMonth,year);
             }
 
             //Storing the start time and end time
-            Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(0));
-            Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(1));
+            Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH)
+                    .parse(formattedDateTime.get(0));
+            Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH)
+                    .parse(formattedDateTime.get(1));
+
+            //Ignore the time of the event
+            startTimeCurEvent = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.US)
+                    .parse(dayOfWeek + " " + month + " " + dayOfMonth + " " + year);
 
             //Store the date as Long for parcelable
             if (start != null) {

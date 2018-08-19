@@ -5,4 +5,7 @@
     <string name="empty_favorites">No favorite selected yet</string>
     <string name="delete">delete</string>
     <string name="action_search">Search</string>
+    <string name="home">Home</string>
+    <string name="calender">Calender</string>
+    <string name="favorites">Favorites</string>
 </resources>

@@ -6,12 +6,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,10 +30,6 @@ public class FragmentHome extends Fragment {
     public ArrayList<Event> eventArrayList;
     private Activity activity;
 
-    public FragmentHome(){
-
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +41,10 @@ public class FragmentHome extends Fragment {
     }
 
 
-
+    /**
+     * Set up the recycler view
+     * @param activity Activity in which recycler view is set up
+     */
     public void configureRecyclerView(Activity activity){
         RecyclerView recyclerView = getView().findViewById(R.id.my_recycler_view);
         recyclerView.hasFixedSize();
@@ -63,7 +60,6 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         configureRecyclerView(getActivity());
 
     }
@@ -74,6 +70,10 @@ public class FragmentHome extends Fragment {
         this.activity = getActivity();
     }
 
+    /**
+     * Set up search function on the action bar. Sets up a listener as well
+     * @param menu Menu item on the action bar
+     */
     public void setUpSearch(Menu menu){
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);

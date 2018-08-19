@@ -13,7 +13,9 @@ import java.util.Locale;
 
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 
-
+/**
+ * Adapter for the recycler view of favorite events
+ */
 public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<FavoritesRecyclerViewAdapter.ViewHolder>{
 
     @Override
@@ -23,7 +25,12 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
         return new ViewHolder(eventRow);
     }
 
-    private static void configureView(ViewHolder holder, int position){
+    /**
+     *
+     * @param holder Holder object that holds all the elements of a view
+     * @param position Index in a recycler view
+     */
+    private void configureView(ViewHolder holder, int position){
 
         final Event eventData = favoritesList.get(position);
         String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());

@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +33,12 @@ import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.storeEvents;
 
 
-public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.ViewHolder> implements Filterable{
+public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Filterable{
 
     private Context context;
     private ArrayList<Event> eventArrayList;
     private ArrayList<Event> filteredList;
+
 
     /**
      *
@@ -59,22 +59,37 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View eventRow = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.event_row, parent, false);
-
-        return new ViewHolder(eventRow);
+    public int getItemViewType(int position){
+        super.getItemViewType(position);
+        if (filteredList.get(position).getIsDivider() == 1){
+            return Constants.DIVIDER_ROW;
+        }
+        else {
+            return Constants.NORMAL_ROW;
+        }
     }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType){
+            case Constants.DIVIDER_ROW:
+                return new DividerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.event_row_divider, parent, false));
+
+            case Constants.NORMAL_ROW:
+                return new EventViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.event_row, parent, false));
+        }
+        return null;
+    }
+
 
     /**
      *
      * @param holder Holder object that holds all the elements of a view
      * @param position Index in a recycler view
      */
-    private void configureView(ViewHolder holder, int position){
+    private void configureView(RecyclerView.ViewHolder holder, int position){
 
         final Event eventData = filteredList.get(position);
-
         eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
         String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
@@ -85,30 +100,49 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
         String dayName = new SimpleDateFormat("EEEE", Locale.US).format(eventData.getStartTime());
         String startTime = hour + ":" + minutes + " " + ampm + " on " + dayName;
 
-        holder.tvMonthText.setText(month);
-        holder.tvDayText.setText(day);
-        holder.tvEventName.setText(eventData.getTitle());
-        holder.tvEventTime.setText(startTime);
-        holder.tvEventLocation.setText(eventData.getLocation());
+        ((EventViewHolder)holder).tvMonthText.setText(month);
+        ((EventViewHolder)holder).tvDayText.setText(day);
+        ((EventViewHolder)holder).tvEventName.setText(eventData.getTitle());
+        ((EventViewHolder)holder).tvEventTime.setText(startTime);
+        ((EventViewHolder)holder).tvEventLocation.setText(eventData.getLocation());
     }
 
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        configureView(holder, position);
+        // Set up view based on whether it is a divider row or an event row
+        if (holder instanceof EventViewHolder){
+            configureView((EventViewHolder) holder, position);
+            //Expands a particular event page
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, IndividualEventActivity.class);
+                    intent.putExtra("Event", eventArrayList.get(position));
+                    context.startActivity(intent);
+                }
+            });
+            setUpFavoritesButton((EventViewHolder) holder, position);
+        }
+        else if (holder instanceof DividerViewHolder){
+            final Event eventData = filteredList.get(position);
+            eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
-        //Expands a particular event page
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, EventActivity.class);
-                intent.putExtra("Event", eventArrayList.get(position));
-                context.startActivity(intent);
-            }
-        });
-        setUpFavoritesButton(holder, position);
-
+            String month = new SimpleDateFormat("MMM", Locale.US)
+                    .format(eventData.getStartTime());
+            String day = new SimpleDateFormat("dd", Locale.US)
+                    .format(eventData.getStartTime());
+            String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US)
+                    .format(eventData.getStartTime());
+            String year = new SimpleDateFormat("YYYY", Locale.US)
+                    .format(eventData.getStartTime());
+            ((DividerViewHolder) holder).tvDividerText.setText(dayOfWeek + ", "
+                    + day + " " + month + " " + year);
+            ((DividerViewHolder) holder).tvDividerText.setTextColor(ContextCompat
+                    .getColor(context, R.color.colorScarlet));
+        }
     }
 
     /**
@@ -145,7 +179,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
      * @param holder Holder object that holds all the elements of a view
      * @param position Index in a recycler view
      */
-    private void setUpFavoritesButton(final ViewHolder holder, final int position){
+    private void setUpFavoritesButton(final EventViewHolder holder, final int position){
         //Animate the favorites button
         final ScaleAnimation scaleAnimation = setAnimation();
 
@@ -168,6 +202,7 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
                 Event event = eventArrayList.get(position);
+                //Update the favorites list
                 if (isChecked){
                     FragmentFavorites.addEvent(event, favoritesList);
                 }
@@ -190,6 +225,10 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
         return filteredList == null ? 0 : filteredList.size();
     }
 
+    /**
+     * Responsible for filtering the results and putting it in a new listbased on query typed by the user
+     * @return Filter results, which will be used by the adapter
+     */
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -197,14 +236,17 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
             protected FilterResults performFiltering(CharSequence constraint) {
                 String query = constraint.toString();
 
+                //Show everythings if query is an empty string
                 if (query.isEmpty()){
                     filteredList = eventArrayList;
                 }
                 else {
                     ArrayList<Event> tempFilteredList = new ArrayList<>();
                     for (Event event: eventArrayList){
+                        // Look for substrings in title and description
                         if (event.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())
-                                || event.getContent().toLowerCase().contains(constraint.toString().toLowerCase())){
+                                || event.getContent().toLowerCase()
+                                .contains(constraint.toString().toLowerCase())){
                             tempFilteredList.add(event);
                         }
                     }
@@ -226,17 +268,18 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
 
 
     /**
-     * ViewHolder class that holds all the views for a particular row in the recycler view
+     * ViewHolder class that holds all the views for a particular event row in the recycler view
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class EventViewHolder extends RecyclerView.ViewHolder {
             private TextView tvMonthText;
             private TextView tvDayText;
             private TextView tvEventName;
             private TextView tvEventTime;
             private TextView tvEventLocation;
             private ToggleButton favorites;
+            private View foregroundView;
 
-            private ViewHolder(View itemView) {
+            private EventViewHolder(View itemView) {
                 super(itemView);
 
                 tvMonthText = itemView.findViewById(R.id.tvMonthText);
@@ -245,7 +288,22 @@ public class HomeRecyclerViewAdapter extends Adapter<HomeRecyclerViewAdapter.Vie
                 tvEventTime = itemView.findViewById(R.id.tvEventTime);
                 tvEventLocation = itemView.findViewById(R.id.tvEventLocation);
                 favorites = itemView.findViewById(R.id.myToggleButton);
+                foregroundView = itemView.findViewById(R.id.view_foreground);
             }
 
+    }
+
+    /**
+     * View holder that specifies divider texts between each day
+     */
+    public static class DividerViewHolder extends RecyclerView.ViewHolder {
+        public TextView tvDividerText;
+
+        private DividerViewHolder(View itemView) {
+            super(itemView);
+            tvDividerText = itemView.findViewById(R.id.tvDividerText);
         }
+
+    }
+
     }

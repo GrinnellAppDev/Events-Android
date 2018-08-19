@@ -9,17 +9,22 @@ import android.view.View;
 
 import static edu.grinnell.appdev.events.R.id.view_foreground;
 
+/**
+ * Class responsible for handling deleting events from favorites using swipe gesture
+ */
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 
     private RecyclerItemTouchHelperListener listener;
 
-    public RecyclerItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
+    public RecyclerItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener
+            listener) {
         super(dragDirs, swipeDirs);
         this.listener = listener;
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                          RecyclerView.ViewHolder target) {
         return false;
     }
 
@@ -44,13 +49,6 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 
     /**
      * For old android versions (Pre honeycomb)
-     * @param c
-     * @param recyclerView
-     * @param viewHolder
-     * @param dX
-     * @param dY
-     * @param actionState
-     * @param isCurrentlyActive
      */
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
@@ -77,6 +75,9 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
         return super.convertToAbsoluteDirection(flags, layoutDirection);
     }
 
+    /**
+     * Interface used for callback once the swipe is completed
+     */
     public interface RecyclerItemTouchHelperListener {
         void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
     }

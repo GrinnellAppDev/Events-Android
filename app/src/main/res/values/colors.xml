@@ -9,6 +9,7 @@
     <color name="colorDarkgray">#707070</color>
     <color name="colorBlack">#000000</color>
     <color name="colorHTMLGray">#808080</color>
+    <color name="colorLightGray">#F3F3F3</color>
 
 
 </resources>

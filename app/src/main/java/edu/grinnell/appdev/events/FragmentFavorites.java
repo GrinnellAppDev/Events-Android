@@ -38,7 +38,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
     }
 
     /**
-     *
+     * Set up the recycler view for favorites items
      * @param activity Activity in which the recycler view resides
      */
     public void configureRecyclerView(Activity activity){
@@ -57,6 +57,11 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
 
     }
 
+    /**
+     *
+     * @param id Unique id of an event, which need to be delete
+     * @param favorites List of events from which the event is deleted
+     */
     public static void removeWithID(String id, ArrayList<Event> favorites){
         for (int i =0; i < favorites.size(); i++) {
             if (favorites.get(i).getId().equals(id)) {
@@ -65,6 +70,11 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         }
     }
 
+    /**
+     *
+     * @param event Event object to be added
+     * @param favorites List in which event object is added
+     */
     public static void addEvent (Event event, ArrayList<Event> favorites){
         for (Event e: favorites){
             if (e.getId().equals(event.getId())){
@@ -81,7 +91,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         recyclerView = getView().findViewById(R.id.favorites_recycler);
         emptyView = getView().findViewById(R.id.empty_view);
 
-
+        //Decided which view to show depending on if the list is empty or not
         if (!MainActivity.favoritesList.isEmpty()) {
             configureRecyclerView(getActivity());
             emptyView.setVisibility(getView().GONE);
@@ -93,7 +103,12 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         }
     }
 
-
+    /**
+     * Reset recycler view after an item has been deleted with a swipe
+     * @param viewHolder
+     * @param direction
+     * @param position
+     */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         removeWithID(MainActivity.favoritesList.get(position).getId(), MainActivity.favoritesList);

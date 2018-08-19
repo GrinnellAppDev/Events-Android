@@ -9,7 +9,8 @@ import java.util.Date;
 
 /**
  * Represents an event model. An event object holds the
- * information about any specific event that is posted on the Grinnell Calender
+ * information about any specific event that is posted on the Grinnell Calender. It implements
+ * parcelable so that Event list can be passed to a fragment using a bundle
  */
 public class Event implements Parcelable{
     private String title;
@@ -18,23 +19,26 @@ public class Event implements Parcelable{
     private Date startTime;
     private Date endTime;
     private Long startTimeMillis;
-    private Long endTimeNewMillis;
+    private Long endTimeMillis;
     private String email;
     private String organizer;
     private String id;
+    private int isDivider;
 
     public Event(String title, String content, String location,
                  Long startTime, Long endTime, String email,
-                 String organizer, String id) {
+                 String organizer, String id, int isDivider) {
         this.title = title;
         this.content = content;
         this.location = location;
         this.startTimeMillis = startTime;
-        this.endTimeNewMillis = endTime;
+        this.endTimeMillis = endTime;
         this.email = email;
         this.id = id;
+        this.isDivider = isDivider;
     }
 
+    //To be read in the same order that the parcel was written
     protected Event(Parcel in) {
         title = in.readString();
         content = in.readString();
@@ -43,7 +47,8 @@ public class Event implements Parcelable{
         organizer = in.readString();
         id = in.readString();
         startTimeMillis = in.readLong();
-        endTimeNewMillis = in.readLong();
+        endTimeMillis = in.readLong();
+        isDivider = in.readInt();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -80,7 +85,7 @@ public class Event implements Parcelable{
 
     public Long getStartTimeNew() {return this.startTimeMillis;}
 
-    public Long getEndTimeNew() {return this.endTimeNewMillis;}
+    public Long getEndTimeNew() {return this.endTimeMillis;}
 
     public String getTitle() {return title;}
 
@@ -94,10 +99,13 @@ public class Event implements Parcelable{
 
     public String getId() {return id;}
 
+    public int getIsDivider() {return isDivider;}
+
     @Override
     public int describeContents() {
         return 0;
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -108,6 +116,7 @@ public class Event implements Parcelable{
         dest.writeString(organizer);
         dest.writeString(id);
         dest.writeLong(startTimeMillis);
-        dest.writeLong(endTimeNewMillis);
+        dest.writeLong(endTimeMillis);
+        dest.writeInt(isDivider);
     }
 }

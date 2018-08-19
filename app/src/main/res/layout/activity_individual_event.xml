@@ -8,8 +8,8 @@
 
     <LinearLayout
         android:id="@+id/llDate"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/len_100"
+        android:layout_height="@dimen/len_100"
         android:orientation="vertical">
 
         <TextView
@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="20sp"
-            android:layout_marginTop="15dp"
+            android:textSize="@dimen/txt_20"
+            android:layout_marginTop="@dimen/margin_15"
             android:textColor="@color/colorScarlet"
             android:text="FEB"/>
 
@@ -26,9 +26,8 @@
             android:id="@+id/tvDayText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above = "@+id/tvMonthText"
             android:gravity="center"
-            android:textSize="35sp"
+            android:textSize="@dimen/txt_30"
             android:text="15"/>
 
     </LinearLayout>
@@ -38,9 +37,9 @@
         android:id="@+id/tvEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/llDate"
-        android:layout_marginTop="15dp"
-        android:textSize="20sp"
+        android:layout_toEndOf="@id/llDate"
+        android:layout_marginTop="@dimen/margin_15"
+        android:textSize="@dimen/txt_20"
         android:textColor="@color/colorBlack"
         android:text="Noyce Master Class - Andrew Jennings"/>
 
@@ -48,17 +47,17 @@
     <View
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="#F3F3F3"
+        android:layout_height="@dimen/len_3"
+        android:background="@color/colorLightGray"
         android:layout_alignBottom="@id/llDate"
         />
     <View
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="#F3F3F3"
+        android:layout_height="@dimen/len_3"
+        android:background="@color/colorLightGray"
         android:layout_below="@id/top_bar"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="@dimen/margin_45"
         />
 
     <RelativeLayout
@@ -68,7 +67,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:id="@+id/Location-Time"
-        android:layout_marginLeft="10dp">
+        android:layout_marginStart="10dp">
 
 
         <ImageView
@@ -76,17 +75,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:src="@drawable/ic_clock"/>
+            android:src="@drawable/ic_clock"
+            android:contentDescription="Time"/>
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/Time"
+            android:layout_toEndOf="@id/Time"
             android:layout_marginTop="5dp"
             android:text="Tue, 3 April at 6:30 PM"
             android:textSize="15sp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             tools:ignore="NotSibling" />
 
         <ImageView
@@ -95,17 +95,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/tvTime"
-            android:src="@drawable/ic_location"/>
+            android:src="@drawable/ic_location"
+            android:contentDescription="Location"/>
 
         <TextView
             android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/Location"
+            android:layout_toEndOf="@id/Location"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/tvTime"
             android:text="Bucksbaum 152 - Lawson Lecture Hall"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textSize="15sp"/>
 
         <ImageView
@@ -114,17 +115,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_person"/>
+            android:src="@drawable/ic_person"
+            android:contentDescription="Organizer"/>
 
         <TextView
             android:id="@+id/tvOrganizer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/Email"
+            android:layout_toEndOf="@id/Email"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/tvLocation"
             android:text="John Smith"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textSize="15sp"/>
 
         <ImageView
@@ -133,18 +135,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_below="@+id/Organizer"
-            android:src="@drawable/ic_email"/>
+            android:src="@drawable/ic_email"
+            android:contentDescription="Email"/>
 
         <TextView
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/Email"
+            android:layout_toEndOf="@id/Email"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/tvOrganizer"
             android:text="abc@grinnell.edu"
             android:autoLink="email"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textSize="15sp"/>
 
 
@@ -180,7 +183,6 @@
             android:id="@+id/Content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below = "@id/Details"
             android:scrollbars="vertical"
             android:textColor="@color/colorHTMLGray"/>
 

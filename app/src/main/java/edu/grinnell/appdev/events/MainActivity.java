@@ -21,7 +21,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static edu.grinnell.appdev.events.Constants.*;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
 
     private FragmentHome homeFragment;
-    private FragmentSearch searchFragment;
+    private FragmentCalender searchFragment;
     private FragmentFavorites favoritesFragment;
     public static SharedPreferences shared;
     BottomNavigationView bottomNavigationView;
@@ -43,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //initializeFragments();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
     private void initializeFragments(){
         homeFragment = new FragmentHome();
-        searchFragment = new FragmentSearch();
+        searchFragment = new FragmentCalender();
         favoritesFragment = new FragmentFavorites();
 
     }
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
                             case R.id.menu_home:
                                 setFragment(homeFragment);
                                 break;
-                            case R.id.menu_search:
+                            case R.id.menu_calender:
                                 setFragment(searchFragment);
                                 break;
                             case R.id.menu_favorites:
@@ -96,14 +97,20 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
                 });
     }
 
+    /**
+     * Download the XML string
+     */
     public void downloadContent(){
-        new Downloader(this).execute(Constants.XML_STRING);
+        new Downloader(this).execute(XML_STRING);
     }
 
+    /**
+     *
+     * @param fragment Particular fragment to switched to
+     */
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
-        //Iffy solution (check again)
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -153,13 +160,21 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         Toast.makeText(getApplicationContext(), failMsg, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Add event list to a bundle, which will be passed to a fragment
+     */
     public void addBundleArgs (){
         Bundle bundle = new Bundle();
-        Log.d("event before bundle", eventList.toString());
         bundle.putParcelableArrayList("Event list", (ArrayList<? extends Parcelable>) eventList);
         homeFragment.setArguments(bundle);
     }
 
+    /**
+     * Stores the event as a file using shared preference
+     * @param eventArrayList The list to be stored
+     * @param context Context param to initialize shared preferene
+     * @param filename Files are stored with filename used a keys
+     */
     public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String filename){
         shared = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = shared.edit();
@@ -174,18 +189,24 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        // Respond to each item selcted on the menu bar
         if (id == R.id.action_refresh) {
+            // Delete the current events list and download everything again
             deleteSharedPreferencesFile(FULL_LIST);
             this.recreate();
             return true;
         }
-        else if (id == R.id.menu_search){
+        else if (id == R.id.menu_calender){
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param filename Files with filename as keys will be deleted locally
+     */
     public void deleteSharedPreferencesFile(String filename){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPrefs.edit();
