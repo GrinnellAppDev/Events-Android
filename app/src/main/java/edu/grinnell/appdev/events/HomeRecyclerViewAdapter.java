@@ -120,7 +120,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, IndividualEventActivity.class);
-                    intent.putExtra("Event", eventArrayList.get(position));
+                    intent.putExtra("Event", filteredList.get(position));
                     context.startActivity(intent);
                 }
             });
@@ -188,8 +188,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
         holder.favorites.setChecked(false);
 
         //Restore state of toggle button while scrolling and refreshing the data
-        if (eventArrayList != null) {
-            Event event = eventArrayList.get(position);
+        if (filteredList != null) {
+            Event event = filteredList.get(position);
             if (containsID(event.getId(), favoritesList)){
                 holder.favorites.setChecked(true);
             }
@@ -201,7 +201,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
-                Event event = eventArrayList.get(position);
+                Event event = filteredList.get(position);
                 //Update the favorites list
                 if (isChecked){
                     FragmentFavorites.addEvent(event, favoritesList, favoritesList.size() - 1);

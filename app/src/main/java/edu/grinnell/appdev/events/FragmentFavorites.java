@@ -92,7 +92,12 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
                 return;
             }
         }
-        favorites.add(position, event);
+        if (position < 0) {
+            favorites.add(0, event);
+        }
+        else {
+            favorites.add(position, event);
+        }
     }
 
     @Override
@@ -165,6 +170,10 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
             @Override
             public void onClick(View v) {
                 addEvent(event, favoritesList, position);
+                if (favoritesList.size() == 1){
+                    recyclerView.setVisibility(getView().VISIBLE);
+                    emptyView.setVisibility(getView().GONE);
+                }
                 recyclerViewAdapter.notifyItemInserted(position);
                 storeEvents(favoritesList, getContext(), FAVORITES_LIST);
             }
