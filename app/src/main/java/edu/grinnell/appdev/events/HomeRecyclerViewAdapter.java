@@ -92,12 +92,18 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
         final Event eventData = filteredList.get(position);
         eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
-        String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
-        String day = new SimpleDateFormat("dd", Locale.US).format(eventData.getStartTime());
-        String hour = new SimpleDateFormat("hh", Locale.US).format(eventData.getStartTime());
-        String minutes = new SimpleDateFormat("mm", Locale.US).format(eventData.getStartTime());
-        String ampm = new SimpleDateFormat("aa", Locale.US).format(eventData.getStartTime());
-        String dayName = new SimpleDateFormat("EEEE", Locale.US).format(eventData.getStartTime());
+        String month = new SimpleDateFormat("MMM", Locale.US)
+                .format(eventData.getStartTime());
+        String day = new SimpleDateFormat("dd", Locale.US)
+                .format(eventData.getStartTime());
+        String hour = new SimpleDateFormat("hh", Locale.US)
+                .format(eventData.getStartTime());
+        String minutes = new SimpleDateFormat("mm", Locale.US)
+                .format(eventData.getStartTime());
+        String ampm = new SimpleDateFormat("aa", Locale.US)
+                .format(eventData.getStartTime());
+        String dayName = new SimpleDateFormat("EEEE", Locale.US)
+                .format(eventData.getStartTime());
         String startTime = hour + ":" + minutes + " " + ampm + " on " + dayName;
 
         ((EventViewHolder)holder).tvMonthText.setText(month);
@@ -122,8 +128,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                     Intent intent = new Intent(context, IndividualEventActivity.class);
                     intent.putExtra("Event", filteredList.get(position));
                     context.startActivity(intent);
+
+                    //Add transition between activity switch
+                    ((MainActivity)context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             });
+
             setUpFavoritesButton((EventViewHolder) holder, position);
         }
         else if (holder instanceof DividerViewHolder){

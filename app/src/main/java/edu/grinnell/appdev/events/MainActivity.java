@@ -2,6 +2,7 @@ package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -12,9 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static edu.grinnell.appdev.events.Constants.*;
@@ -203,7 +200,11 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             return true;
         }
         else if (id == R.id.action_help){
-            Toast.makeText(this, "yet to be implemented", Toast.LENGTH_LONG).show();
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.setType("text/email");
+            email.putExtra(Intent.EXTRA_EMAIL, new String[] {"am.lamsal@gmail.com"});
+            email.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
+            startActivity(Intent.createChooser(email, "Ask help/Send feedback"));
             return true;
         }
 
