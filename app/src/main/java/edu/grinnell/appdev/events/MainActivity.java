@@ -200,11 +200,13 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             return true;
         }
         else if (id == R.id.action_help){
-            Intent email = new Intent(Intent.ACTION_SEND);
+            /*Intent email = new Intent(Intent.ACTION_SEND);
             email.setType("text/email");
             email.putExtra(Intent.EXTRA_EMAIL, new String[] {"am.lamsal@gmail.com"});
             email.putExtra(Intent.EXTRA_SUBJECT, "Help/Feedback");
-            startActivity(Intent.createChooser(email, "Ask help/Send feedback"));
+            startActivity(Intent.createChooser(email, "Ask help/Send feedback"));*/
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            startActivity(intent);
             return true;
         }
 

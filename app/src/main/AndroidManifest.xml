@@ -31,6 +31,9 @@
         <activity android:name=".IndividualEventActivity"
             android:theme="@style/AppTheme"/>
 
+        <activity android:name=".FeedbackActivity"
+            android:theme="@style/AppTheme"/>
+
     </application>
 
 </manifest>
