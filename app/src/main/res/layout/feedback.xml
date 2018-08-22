@@ -23,7 +23,8 @@
         android:textSize="@dimen/txt_15"
         android:layout_below="@+id/tvFeedbackHeading"
         android:layout_marginTop="15dp"
-        android:inputType="textMultiLine"/>
+        android:inputType="textMultiLine"
+        android:labelFor="@+id/etFeedbackContent"/>
 
     <Button
         android:id="@+id/Feedback_btn"

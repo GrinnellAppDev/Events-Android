@@ -64,17 +64,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bottom_bar"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
         android:id="@+id/Location-Time"
-        android:layout_marginStart="10dp">
+        android:layout_marginStart="@dimen/margin_10">
 
 
         <ImageView
             android:id="@+id/Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
             android:src="@drawable/ic_clock"
             android:contentDescription="Time"/>
 
@@ -83,17 +82,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/Time"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/margin_5"
             android:text="Tue, 3 April at 6:30 PM"
-            android:textSize="15sp"
-            android:layout_marginStart="10dp"
+            android:textSize="@dimen/txt_15"
+            android:layout_marginStart="@dimen/margin_10"
             tools:ignore="NotSibling" />
 
         <ImageView
             android:id="@+id/Location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_10"
             android:layout_below="@+id/tvTime"
             android:src="@drawable/ic_location"
             android:contentDescription="Location"/>
@@ -103,18 +102,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/Location"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/margin_15"
             android:layout_below="@+id/tvTime"
             android:text="Bucksbaum 152 - Lawson Lecture Hall"
-            android:layout_marginStart="10dp"
-            android:textSize="15sp"/>
+            android:layout_marginStart="@dimen/margin_10"
+            android:textSize="@dimen/txt_15"/>
 
         <ImageView
             android:id="@+id/Organizer"
             android:layout_below="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_10"
             android:src="@drawable/ic_person"
             android:contentDescription="Organizer"/>
 
@@ -123,17 +122,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/Email"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/margin_15"
             android:layout_below="@+id/tvLocation"
             android:text="John Smith"
-            android:layout_marginStart="10dp"
-            android:textSize="15sp"/>
+            android:layout_marginStart="@dimen/margin_10"
+            android:textSize="@dimen/txt_15"/>
 
         <ImageView
             android:id="@+id/Email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/margin_5"
             android:layout_below="@+id/Organizer"
             android:src="@drawable/ic_email"
             android:contentDescription="Email"/>
@@ -143,12 +142,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/Email"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/margin_15"
             android:layout_below="@+id/tvOrganizer"
             android:text="abc@grinnell.edu"
             android:autoLink="email"
-            android:layout_marginStart="10dp"
-            android:textSize="15sp"/>
+            android:layout_marginStart="@dimen/margin_10"
+            android:textSize="@dimen/txt_15"/>
 
 
 
@@ -156,8 +155,8 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#F3F3F3"
+        android:layout_height="@dimen/len_10"
+        android:background="@color/colorLightGray"
         android:layout_below="@id/Location-Time"/>
 
 
@@ -166,8 +165,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Location-Time"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="@dimen/margin_15"
+        android:layout_marginStart="@dimen/margin_15"
         android:orientation="vertical">
 
         <TextView
@@ -175,8 +174,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Details"
-            android:layout_marginTop="15dp"
-            android:textSize="15sp"/>
+            android:layout_marginTop="@dimen/margin_15"
+            android:textSize="@dimen/txt_15"/>
 
 
         <TextView
@@ -193,10 +192,11 @@
         android:id="@+id/Calender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="@dimen/margin_50"
+        android:layout_marginRight="@dimen/margin_50"
         android:layout_marginTop="20dp"
         android:layout_below="@id/Description"
+        android:background="@color/colorScarlet"
         android:text="Add to Calender"/>
 
 
