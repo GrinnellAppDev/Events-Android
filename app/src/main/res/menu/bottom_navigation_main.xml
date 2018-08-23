@@ -5,16 +5,19 @@
         android:icon="@drawable/ic_home"
         android:title="@string/home"
         />
-    <item
-        android:id="@+id/menu_calender"
-        android:icon="@drawable/ic_calender"
-        android:title="@string/calender"
-        />
 
     <item
         android:id="@+id/menu_favorites"
         android:icon="@drawable/ic_favorites"
         android:title="@string/favorites"/>
+
+    <item
+        android:id="@+id/menu_calender"
+        android:icon="@drawable/ic_map"
+        android:title="@string/map"
+        />
+
+
 
 
 </menu>

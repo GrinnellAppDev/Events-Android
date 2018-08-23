@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
 
     private FragmentHome homeFragment;
-    private FragmentCalender searchFragment;
+    private FragmentLocation searchFragment;
     private FragmentFavorites favoritesFragment;
     public static SharedPreferences shared;
     BottomNavigationView bottomNavigationView;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
     private void initializeFragments(){
         homeFragment = new FragmentHome();
-        searchFragment = new FragmentCalender();
+        searchFragment = new FragmentLocation();
         favoritesFragment = new FragmentFavorites();
 
     }
