@@ -1,34 +1,27 @@
 package edu.grinnell.appdev.events;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
-import static edu.grinnell.appdev.events.MainActivity.storeEvents;
-import static edu.grinnell.appdev.events.R.id.coordinator_layout;
+import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
 
 /**
@@ -59,7 +52,6 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         recyclerView.setLayoutManager(layoutManager);
         recyclerViewAdapter = new FavoritesRecyclerViewAdapter();
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
-
         recyclerView.setAdapter(recyclerViewAdapter);
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
@@ -108,7 +100,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         emptyView = getView().findViewById(R.id.empty_view);
 
         //Decide which view to show depending on if the list is empty or not
-        if (!MainActivity.favoritesList.isEmpty()) {
+        if (!favoritesList.isEmpty()) {
             configureRecyclerView(getActivity());
             emptyView.setVisibility(getView().GONE);
             recyclerView.setVisibility(getView().VISIBLE);
@@ -128,9 +120,9 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      */
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, final int position) {
-        Event itemRemoved = MainActivity.favoritesList.get(position);
-        removeWithID(itemRemoved.getId(), MainActivity.favoritesList);
-        storeEvents(favoritesList, getContext(), FAVORITES_LIST);
+        Event itemRemoved = favoritesList.get(position);
+        removeWithID(itemRemoved.getId(), favoritesList);
+        writeToFile(getContext(), FAVORITES_LIST, favoritesList);
         recyclerViewAdapter.notifyItemRemoved(position);
 
         displaySnackBarWithBottomMargin(position, itemRemoved);
@@ -175,7 +167,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
                     emptyView.setVisibility(getView().GONE);
                 }
                 recyclerViewAdapter.notifyItemInserted(position);
-                storeEvents(favoritesList, getContext(), FAVORITES_LIST);
+                writeToFile(getContext(), FAVORITES_LIST, favoritesList);
             }
         });
         snackbar.show();

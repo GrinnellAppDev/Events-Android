@@ -3,8 +3,6 @@ package edu.grinnell.appdev.events;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,10 +17,6 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +24,7 @@ import java.util.Locale;
 
 import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
-import static edu.grinnell.appdev.events.MainActivity.storeEvents;
+import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
 
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Filterable{
@@ -38,7 +32,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
     private Context context;
     private ArrayList<Event> eventArrayList;
     private ArrayList<Event> filteredList;
-
 
     /**
      *
@@ -48,14 +41,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
         this.context = context;
         this.eventArrayList = eventArrayList;
         this.filteredList = eventArrayList;
-        favoritesList = new ArrayList<>();
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String favStr = sharedPrefs.getString(FAVORITES_LIST, null);
-        if (favStr != null){
-            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-            Gson gson = new Gson();
-            favoritesList = gson.fromJson(favStr, type); //Restore previous data
-        }
+
     }
 
     @Override
@@ -146,7 +132,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                     .format(eventData.getStartTime());
             String dayOfWeek = new SimpleDateFormat("EEEE", Locale.US)
                     .format(eventData.getStartTime());
-            String year = new SimpleDateFormat("YYYY", Locale.US)
+            String year = new SimpleDateFormat("yyyy", Locale.US)
                     .format(eventData.getStartTime());
             ((DividerViewHolder) holder).tvDividerText.setText(dayOfWeek + ", "
                     + day + " " + month + " " + year);
@@ -220,7 +206,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                     FragmentFavorites.removeWithID(event.getId(), favoritesList);
                 }
                 // Create/Update shared preference for favorites list
-                storeEvents(favoritesList, context, FAVORITES_LIST);
+                writeToFile(context, FAVORITES_LIST, favoritesList);
+                //storeEvents(favoritesList, context, FAVORITES_LIST);
             }
         });
     }

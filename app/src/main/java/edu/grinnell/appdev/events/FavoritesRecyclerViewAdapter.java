@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +30,6 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<Favorites
      * @param position Index in a recycler view
      */
     private void configureView(ViewHolder holder, int position){
-
         final Event eventData = favoritesList.get(position);
         String month = new SimpleDateFormat("MMM", Locale.US).format(eventData.getStartTime());
         String day = new SimpleDateFormat("dd", Locale.US).format(eventData.getStartTime());

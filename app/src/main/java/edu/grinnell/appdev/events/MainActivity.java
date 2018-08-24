@@ -1,12 +1,11 @@
 package edu.grinnell.appdev.events;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -19,11 +18,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import static edu.grinnell.appdev.events.Constants.XML_STRING;
 
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
@@ -33,9 +38,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
 
     private FragmentHome homeFragment;
-    private FragmentLocation searchFragment;
+    private FragmentMap mapFragment;
     private FragmentFavorites favoritesFragment;
-    public static SharedPreferences shared;
     BottomNavigationView bottomNavigationView;
 
     public static final String FULL_LIST = "FULL_LIST";
@@ -46,8 +50,61 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String json = sharedPrefs.getString(FULL_LIST, null); //Retrieve previously saved data
+        favoritesList = new ArrayList<>();
+        fetchData(this);
+        setUpMainActivityUI();
+
+    }
+
+    /**
+     * Initialize the fragments
+     */
+    private void initializeFragments(){
+        homeFragment = new FragmentHome();
+        mapFragment = new FragmentMap();
+        favoritesFragment = new FragmentFavorites();
+
+    }
+
+    /**
+     *
+     * @param filename Name of file to be written in internal storage
+     * @param activity Activity being called from
+     * @param fullList Boolean to distinguish between types of list
+     * @return String: Data that is read from file
+     */
+    public static String readData(String filename, Activity activity, Boolean fullList){
+        String yourFilePath = activity.getFilesDir() + "/" + filename;
+        File yourFile = new File( yourFilePath );
+        BufferedInputStream buf = null;
+        String json = null;
+
+        int size = (int) yourFile.length();
+        byte[] bytes = new byte[size];
+        try {
+            buf = new BufferedInputStream(new FileInputStream(yourFile));
+            buf.read(bytes, 0, bytes.length);
+            buf.close();
+            json = new String(bytes);
+        } catch (FileNotFoundException e) {
+            if (fullList) {
+                downloadContent(activity);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+
+    }
+
+    /**
+     * Fetches the data from file to initialize the recycler view
+     * @param activity Activity being called from
+     */
+    private void fetchData(Activity activity){
+
+        String json = readData(FULL_LIST, activity, true);
 
         if (json != null) {
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
@@ -58,22 +115,12 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
             Toast.makeText(this, "Data restored from local device", Toast.LENGTH_SHORT).show();
             setFragment(homeFragment);
         }
-        else {
-            //Downloading the XML through a separate thread
-            downloadContent();
-        }
-
-        setUpMainActivityUI();
-
     }
 
-    private void initializeFragments(){
-        homeFragment = new FragmentHome();
-        searchFragment = new FragmentLocation();
-        favoritesFragment = new FragmentFavorites();
-
-    }
-
+    /**
+     * Initialize the bottom navigation view. Also handles the switch between nav items
+     * @param bottomNavigationView A bottomNavigationView object, in which a listener will be added
+     */
     void bottomNavigationViewInitialize(BottomNavigationView bottomNavigationView){
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -84,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
                             case R.id.menu_home:
                                 setFragment(homeFragment);
                                 break;
-                            case R.id.menu_calender:
-                                setFragment(searchFragment);
+                            case R.id.menu_map:
+                                setFragment(mapFragment);
                                 break;
                             case R.id.menu_favorites:
                                 setFragment(favoritesFragment);
@@ -99,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     /**
      * Download the XML string
      */
-    public void downloadContent(){
-        new Downloader(this).execute(XML_STRING);
+    public static void downloadContent(Activity activity){
+        new Downloader(activity).execute(XML_STRING);
     }
 
     /**
@@ -146,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         addBundleArgs();
         setFragment(homeFragment);
         Toast.makeText(this, "Downloaded the latest data", Toast.LENGTH_SHORT).show();
-        storeEvents((ArrayList<Event>) eventList, this, FULL_LIST);
+        writeToFile(this, FULL_LIST, (ArrayList<Event>) eventList);
     }
 
 
@@ -168,21 +215,35 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         homeFragment.setArguments(bundle);
     }
 
+
     /**
-     * Stores the event as a file using shared preference
-     * TODO: Change the implementation to file rather than store it in memory
-     * @param eventArrayList The list to be stored
-     * @param context Context param to initialize shared preferene
-     * @param key Files are stored with key used a keys
+     *
+     * @param context The context that the function is being called from
+     * @param filename Name of file to be written
+     * @param eventList ArrayList of events to be written to file
      */
-    public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String key){
-        shared = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = shared.edit();
+    public static void writeToFile(Context context, String filename, ArrayList<Event> eventList){
         Gson gson = new Gson();
         String json = "";
-        json = gson.toJson(eventArrayList); //Convert the array to json
-        editor.putString(key, json); //Put the variable in memory
-        editor.apply();
+        json = gson.toJson(eventList); //Convert the array to json string
+
+        File file = new File(String.valueOf(context.getFilesDir()));
+        if(!file.exists()){
+            file.mkdir();
+        }
+
+        try{
+            File gpxfile = new File(file, filename);
+            FileWriter writer = new FileWriter(gpxfile);
+            writer.append(json);
+            writer.flush();
+            writer.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
     }
 
     @Override
@@ -192,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         // Respond to each item selcted on the menu bar
         if (id == R.id.action_refresh) {
             // Delete the current events list and download everything again
-            deleteSharedPreferencesFile(FULL_LIST);
+            deleteLocalFile(FULL_LIST);
             this.recreate();
             return true;
         }
@@ -210,17 +271,20 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     }
 
 
+
+
     /**
      *
-     * @param key Files with key as keys will be deleted locally
+     * @param filename Files with filename will be deleted locally
      */
-    public void deleteSharedPreferencesFile(String key){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.remove(key);
-        editor.apply();
+    public void deleteLocalFile(String filename){
+        File file = new File(getFilesDir(), filename);
+        file.delete();
     }
 
+    /**
+     * Set Up the UI for main Activity before the fragments are set up
+     */
     public void setUpMainActivityUI(){
         bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);

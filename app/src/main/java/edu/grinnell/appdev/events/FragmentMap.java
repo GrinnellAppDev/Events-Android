@@ -20,11 +20,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentLocation extends Fragment {
+public class FragmentMap extends Fragment {
     MapView mapView;
     GoogleMap gmap;
 
-    public FragmentLocation() {
+    public FragmentMap() {
         // Required empty public constructor
     }
 

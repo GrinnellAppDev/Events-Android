@@ -17,9 +17,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
+import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 
 
 /**
@@ -52,6 +57,13 @@ public class FragmentHome extends Fragment {
         recyclerView.hasFixedSize();
         layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
+        String favStr = MainActivity.readData(MainActivity.FAVORITES_LIST, getActivity(), false);
+        if (favStr != null){
+            Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+            Gson gson = new Gson();
+            favoritesList = gson.fromJson(favStr, type); //Restore previous data
+        }
+
         recyclerViewAdapter = new HomeRecyclerViewAdapter(activity, eventArrayList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setAdapter(recyclerViewAdapter);
