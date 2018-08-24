@@ -170,17 +170,18 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
     /**
      * Stores the event as a file using shared preference
+     * TODO: Change the implementation to file rather than store it in memory
      * @param eventArrayList The list to be stored
      * @param context Context param to initialize shared preferene
-     * @param filename Files are stored with filename used a keys
+     * @param key Files are stored with key used a keys
      */
-    public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String filename){
+    public static void storeEvents(ArrayList<Event> eventArrayList, Context context, String key){
         shared = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = "";
         json = gson.toJson(eventArrayList); //Convert the array to json
-        editor.putString(filename, json); //Put the variable in memory
+        editor.putString(key, json); //Put the variable in memory
         editor.apply();
     }
 
@@ -211,12 +212,12 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
 
     /**
      *
-     * @param filename Files with filename as keys will be deleted locally
+     * @param key Files with key as keys will be deleted locally
      */
-    public void deleteSharedPreferencesFile(String filename){
+    public void deleteSharedPreferencesFile(String key){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.remove(filename);
+        editor.remove(key);
         editor.apply();
     }
 
@@ -227,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         bottomNavigationViewInitialize(bottomNavigationView);
 
         Toolbar homeToolBar = findViewById(R.id.my_toolbar);
+        homeToolBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         setSupportActionBar(homeToolBar);
     }
 

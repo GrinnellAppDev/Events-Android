@@ -29,6 +29,7 @@ public class FragmentLocation extends Fragment {
     }
 
 
+    //TODO: Restore the state of the map after switching fragments. Add more Locations.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map, container, false);
