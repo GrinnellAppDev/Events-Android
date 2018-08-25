@@ -271,8 +271,6 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     }
 
 
-
-
     /**
      *
      * @param filename Files with filename will be deleted locally

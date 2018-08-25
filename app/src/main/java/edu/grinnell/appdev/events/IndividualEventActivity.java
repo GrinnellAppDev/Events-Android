@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,15 @@ public class IndividualEventActivity extends AppCompatActivity{
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_individual_event);
+
+            Toolbar indActBar  = findViewById(R.id.ind_act_toolbar);
+            indActBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+            setSupportActionBar(indActBar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
+
 
             // Receive the event passed from home fragment
             eventData = getIntent().getParcelableExtra("Event");
@@ -214,6 +224,12 @@ public class IndividualEventActivity extends AppCompatActivity{
         cr.insert(Events.CONTENT_URI, values);
         Toast.makeText(getApplicationContext(), "Event inserted!", Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     /**

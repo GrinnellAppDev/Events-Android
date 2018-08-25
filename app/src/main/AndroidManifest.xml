@@ -33,12 +33,12 @@
         </activity>
 
         <activity android:name=".IndividualEventActivity"
-            android:theme="@style/AppTheme"/>
+            android:label="@string/individual_profile"
+            android:theme="@style/IndActivity"/>
 
         <activity android:name=".FeedbackActivity"
-            android:theme="@style/AppTheme"/>
-
-
+            android:label="@string/feedback"
+            android:theme="@style/IndActivity"/>
 
     </application>
 

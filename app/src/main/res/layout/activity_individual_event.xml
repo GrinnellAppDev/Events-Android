@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+     <android.support.v7.widget.Toolbar
+         android:id="@+id/ind_act_toolbar"
+         android:layout_width="match_parent"
+         android:layout_height="?attr/actionBarSize"
+         android:background="?attr/colorPrimary"
+         android:elevation="4dp"
+         android:backgroundTint="@color/colorScarlet"
+         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+         android:theme="@style/ToolbarStyle"
+         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="?attr/actionBarSize">
 
     <LinearLayout
         android:id="@+id/llDate"
@@ -194,11 +219,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_50"
         android:layout_marginRight="@dimen/margin_50"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginBottom="@dimen/margin_20"
         android:layout_below="@id/Description"
         android:background="@color/colorScarlet"
         android:text="Add to Calender"/>
 
+    </RelativeLayout>
 
+    </RelativeLayout>
 
-</RelativeLayout>
+</ScrollView>
+
