@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
@@ -74,7 +74,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
      * @param position Index in a recycler view
      */
     private void configureView(RecyclerView.ViewHolder holder, int position){
-
         final Event eventData = filteredList.get(position);
         eventData.setStartTime(new Date(eventData.getStartTimeNew()));
 
@@ -207,7 +206,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 }
                 // Create/Update shared preference for favorites list
                 writeToFile(context, FAVORITES_LIST, favoritesList);
-                //storeEvents(favoritesList, context, FAVORITES_LIST);
             }
         });
     }

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-import static edu.grinnell.appdev.events.MainActivity.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 

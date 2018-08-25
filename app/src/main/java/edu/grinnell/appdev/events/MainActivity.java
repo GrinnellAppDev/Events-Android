@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static edu.grinnell.appdev.events.Constants.*;
 import static edu.grinnell.appdev.events.Constants.XML_STRING;
 
 
@@ -40,10 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     private FragmentHome homeFragment;
     private FragmentMap mapFragment;
     private FragmentFavorites favoritesFragment;
-    BottomNavigationView bottomNavigationView;
-
-    public static final String FULL_LIST = "FULL_LIST";
-    public static final String FAVORITES_LIST = "FAVORITES_LST";
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         // Respond to each item selcted on the menu bar
         if (id == R.id.action_refresh) {
             // Delete the current events list and download everything again
-            deleteLocalFile(FULL_LIST);
+            deleteLocalFile(this,FULL_LIST);
             this.recreate();
             return true;
         }
@@ -275,8 +273,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
      *
      * @param filename Files with filename will be deleted locally
      */
-    public void deleteLocalFile(String filename){
-        File file = new File(getFilesDir(), filename);
+    public static void deleteLocalFile(Activity activity, String filename){
+        File file = new File(activity.getFilesDir(), filename);
         file.delete();
     }
 

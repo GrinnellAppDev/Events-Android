@@ -3,7 +3,6 @@ package edu.grinnell.appdev.events;
 
 public class Constants {
 
-    //Constant for various successes or failures during parsing
     public static final int ERROR_URL_PARSING = -1;
     public static final int ERROR_STREAM = -2;
     public static final int ERROR_NULL_STRING = -3;
@@ -14,4 +13,8 @@ public class Constants {
     public static final int PERMISSIONS_REQUEST = 1;
     public static final int DIVIDER_ROW = 5;
     public static final int NORMAL_ROW = 6;
+    public static final int REFRESH_OFFSET = 20;
+    public static final String FULL_LIST = "FULL_LIST";
+    public static final String FAVORITES_LIST = "FAVORITES_LST";
+    public static boolean FRESH_START = true;
 }

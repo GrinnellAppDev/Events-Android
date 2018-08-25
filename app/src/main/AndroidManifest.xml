@@ -17,13 +17,19 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBB8Dq5njMD-dmU_CDOd9FgLOzoLQF5NPs" />
 
-        <activity android:name=".MainActivity"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

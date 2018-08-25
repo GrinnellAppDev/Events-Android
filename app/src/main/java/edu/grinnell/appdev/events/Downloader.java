@@ -35,10 +35,12 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
      */
     @Override
     protected void onPreExecute(){
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setTitle("App status");
-        progressDialog.setMessage("Downloading data");
-        progressDialog.show();
+        if (FRESH_START) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("App status");
+            progressDialog.setMessage("Downloading data");
+            progressDialog.show();
+        }
     }
 
     /**
@@ -132,7 +134,9 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
             String failMsg = "Downloading of the XML failed";
             mOnDownloadComplete.onDownloadFail(failMsg);
         }
-        progressDialog.dismiss();
+        if (FRESH_START) {
+            progressDialog.dismiss();
+        }
 
     }
 

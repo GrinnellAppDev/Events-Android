@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import static edu.grinnell.appdev.events.Constants.ERROR_PARSING;
+import static edu.grinnell.appdev.events.Constants.FRESH_START;
 import static edu.grinnell.appdev.events.Constants.LENGTH_OF_XML_DECLARATION;
 import static edu.grinnell.appdev.events.Constants.SUCCESS;
 
@@ -59,10 +60,12 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      */
     @Override
     protected void onPreExecute(){
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setTitle("App status");
-        progressDialog.setMessage("Downloading data");
-        progressDialog.show();
+        if (FRESH_START) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("App status");
+            progressDialog.setMessage("Downloading data");
+            progressDialog.show();
+        }
     }
 
     //The method is supposed to parse the XML string that is passed as an argument
@@ -82,7 +85,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             e.printStackTrace();
             return ERROR_PARSING;
         }
-
+        int count = 0;
         //Iterate through each event
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = xpp.getName();
@@ -103,16 +106,21 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                         //Adding row divided for each day in recycler view. Stored a an event object
                         // with only one field
                         if (startTimePrevEvent == null || startTimePrevEvent.before(startTimeCurEvent)){
-                            Event psedoEvent = new Event("", "", "",
-                                    startTimeCurEvent.getTime(), (long) 0, "", "",
-                                    "", 1);
-                            eventList.add(psedoEvent);
-                            startTimePrevEvent = startTimeCurEvent;
+                            if (startTimeCurEvent != null) {
+                                Event pseudoEvent = new Event("", "", "",
+                                        startTimeCurEvent.getTime(), (long) 0, "", "",
+                                        "", 1);
+                                eventList.add(pseudoEvent);
+                                startTimePrevEvent = startTimeCurEvent;
+                            }
                         }
+
                         //Populate the event and add it to the list
-                        event = new Event(title, content, evlocation, startTime, endTime, orgEmail,
-                                "John Smith", id, 0);
-                        eventList.add(event);
+                        if (startTime != null) {
+                            event = new Event(title, content, evlocation, startTime, endTime, orgEmail,
+                                    "John Smith", id, 0);
+                            eventList.add(event);
+                        }
                     }
                     break;
 
@@ -340,7 +348,10 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             String failMsg = "Unable to load data";
             mOnParseComplete.onParseFail(failMsg);
         }
-        progressDialog.dismiss();
+        if (FRESH_START) {
+            progressDialog.dismiss();
+            FRESH_START = false;
+        }
     }
 }
 

@@ -27,4 +27,5 @@
 
     <dimen name="txt_limit_800">800dp</dimen>
     <dimen name="txt_limit_275">275dp</dimen>
+
 </resources>

@@ -7,10 +7,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,19 +26,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
+import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Constants.REFRESH_OFFSET;
+import static edu.grinnell.appdev.events.MainActivity.downloadContent;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
+import static edu.grinnell.appdev.events.MainActivity.readData;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentHome extends Fragment {
+public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public HomeRecyclerViewAdapter recyclerViewAdapter;
     public ArrayList<Event> eventArrayList;
     private Activity activity;
     private RecyclerView.LayoutManager layoutManager;
     private Parcelable parcelable;
+    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +51,25 @@ public class FragmentHome extends Fragment {
         // Inflate the layout for this fragment
         eventArrayList = getArguments().getParcelableArrayList("Event list");
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        SwipeRefreshLayout mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        //Set the offset of the swipe animation such that it is below the action bar
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        mSwipeRefreshLayout.setProgressViewOffset(false, actionBarHeight,
+                actionBarHeight + REFRESH_OFFSET);
+        return rootView;
     }
 
 
@@ -57,7 +82,7 @@ public class FragmentHome extends Fragment {
         recyclerView.hasFixedSize();
         layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
-        String favStr = MainActivity.readData(MainActivity.FAVORITES_LIST, getActivity(), false);
+        String favStr = readData(FAVORITES_LIST, getActivity(), false);
         if (favStr != null){
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
             Gson gson = new Gson();
@@ -77,6 +102,7 @@ public class FragmentHome extends Fragment {
         configureRecyclerView(getActivity());
 
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
@@ -147,4 +173,8 @@ public class FragmentHome extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+        downloadContent(getActivity());
+    }
 }

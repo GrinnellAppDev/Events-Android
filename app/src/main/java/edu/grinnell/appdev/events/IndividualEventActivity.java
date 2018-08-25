@@ -9,11 +9,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,14 +37,7 @@ public class IndividualEventActivity extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_individual_event);
 
-            Toolbar indActBar  = findViewById(R.id.ind_act_toolbar);
-            indActBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-            setSupportActionBar(indActBar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
-
+            setUpToolBar();
 
             // Receive the event passed from home fragment
             eventData = getIntent().getParcelableExtra("Event");
@@ -56,6 +49,20 @@ public class IndividualEventActivity extends AppCompatActivity{
             setView();
 
         }
+
+
+    /**
+     * Sets up the toolbar to enable the back button
+     */
+    private void setUpToolBar(){
+        Toolbar indActBar  = findViewById(R.id.ind_act_toolbar);
+        indActBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
+        setSupportActionBar(indActBar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+    }
 
 
     /**
