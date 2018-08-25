@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         String json = readData(FULL_LIST, activity, true);
 
         if (json != null) {
+            FRESH_START = false;
             Type type = new TypeToken<ArrayList<Event>>() {}.getType();
             Gson gson = new Gson();
             eventList = gson.fromJson(json, type); //Restore previous data

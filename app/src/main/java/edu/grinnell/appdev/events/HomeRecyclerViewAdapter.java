@@ -272,7 +272,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
             private TextView tvEventTime;
             private TextView tvEventLocation;
             private ToggleButton favorites;
-            private View foregroundView;
 
             private EventViewHolder(View itemView) {
                 super(itemView);
@@ -283,7 +282,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 tvEventTime = itemView.findViewById(R.id.tvEventTime);
                 tvEventLocation = itemView.findViewById(R.id.tvEventLocation);
                 favorites = itemView.findViewById(R.id.myToggleButton);
-                foregroundView = itemView.findViewById(R.id.view_foreground);
             }
 
     }
