@@ -34,7 +34,7 @@ import static edu.grinnell.appdev.events.Constants.XML_STRING;
 
 public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
     private String xmlData;
-    public List<Event> eventList;
+    private List<Event> eventList;
     public static ArrayList<Event> favoritesList;
 
 
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
      * Initialize the bottom navigation view. Also handles the switch between nav items
      * @param bottomNavigationView A bottomNavigationView object, in which a listener will be added
      */
-    void bottomNavigationViewInitialize(BottomNavigationView bottomNavigationView){
+    private void bottomNavigationViewInitialize(BottomNavigationView bottomNavigationView){
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @SuppressLint("CommitTransaction")
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     /**
      * Add event list to a bundle, which will be passed to a fragment
      */
-    public void addBundleArgs (){
+    private void addBundleArgs (){
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("Event list", (ArrayList<? extends Parcelable>) eventList);
         homeFragment.setArguments(bundle);
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
     /**
      * Set Up the UI for main Activity before the fragments are set up
      */
-    public void setUpMainActivityUI(){
+    private void setUpMainActivityUI(){
         bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 

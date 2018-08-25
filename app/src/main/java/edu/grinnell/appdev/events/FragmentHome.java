@@ -77,7 +77,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
      * Set up the recycler view
      * @param activity Activity in which recycler view is set up
      */
-    public void configureRecyclerView(Activity activity){
+    private void configureRecyclerView(Activity activity){
         RecyclerView recyclerView = getView().findViewById(R.id.my_recycler_view);
         recyclerView.hasFixedSize();
         layoutManager = new LinearLayoutManager(activity);
@@ -118,7 +118,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
      * Set up search function on the action bar. Sets up a listener as well
      * @param menu Menu item on the action bar
      */
-    public void setUpSearch(Menu menu){
+    private void setUpSearch(Menu menu){
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search)

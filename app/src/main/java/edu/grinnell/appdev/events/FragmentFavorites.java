@@ -45,7 +45,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      * Set up the recycler view for favorites items
      * @param activity Activity in which the recycler view resides
      */
-    public void configureRecyclerView(Activity activity){
+    private void configureRecyclerView(Activity activity){
 
         recyclerView.hasFixedSize();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
@@ -138,7 +138,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      * @param position Position to insert the deleted item
      * @param event Event to be added back
      */
-    public void displaySnackBarWithBottomMargin(final int position, final Event event) {
+    private void displaySnackBarWithBottomMargin(final int position, final Event event) {
 
         // Get the margin for snackbar, which is equal to the height of the bottom navigation view
         TypedValue tv = new TypedValue();
