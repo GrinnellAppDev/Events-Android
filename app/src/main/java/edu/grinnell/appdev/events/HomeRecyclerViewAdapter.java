@@ -1,6 +1,8 @@
 package edu.grinnell.appdev.events;
 
 
+import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +25,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.FragmentFavorites.*;
+import static edu.grinnell.appdev.events.FragmentFavorites.addEvent;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
@@ -197,12 +201,15 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 //animation
                 compoundButton.startAnimation(scaleAnimation);
                 Event event = filteredList.get(position);
+                NotificationHandler.createNotificationChannel((Activity) context);
                 //Update the favorites list
                 if (isChecked){
-                    FragmentFavorites.addEvent(event, favoritesList, favoritesList.size() - 1);
+                    addEvent(event, favoritesList, favoritesList.size() - 1);
+                    Notification notification = NotificationHandler.buildNotfication((Activity) context, event.getTitle(), "Event has started");
+                    NotificationHandler.createNotification((Activity) context,position, event.getStartTimeNew(), notification);
                 }
                 else {
-                    FragmentFavorites.removeWithID(event.getId(), favoritesList);
+                    removeWithID(event.getId(), favoritesList);
                 }
                 // Create/Update shared preference for favorites list
                 writeToFile(context, FAVORITES_LIST, favoritesList);

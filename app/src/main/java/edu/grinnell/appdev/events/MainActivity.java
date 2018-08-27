@@ -252,8 +252,8 @@ public class MainActivity extends AppCompatActivity implements OnDownloadComplet
         // Respond to each item selcted on the menu bar
         if (id == R.id.action_refresh) {
             // Delete the current events list and download everything again
-            deleteLocalFile(this,FULL_LIST);
-            this.recreate();
+            FRESH_START = true;
+            downloadContent(this);
             return true;
         }
         else if(id == R.id.action_settings){

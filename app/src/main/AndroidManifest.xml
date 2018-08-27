@@ -46,6 +46,8 @@
             android:label="@string/feedback"
             android:theme="@style/IndActivity"/>
 
+        <receiver android:name=".NotificationPublisher"/>
+
     </application>
 
 </manifest>
