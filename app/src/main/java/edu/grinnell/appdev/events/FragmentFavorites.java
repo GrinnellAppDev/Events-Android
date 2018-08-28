@@ -2,6 +2,7 @@ package edu.grinnell.appdev.events;
 
 
 import android.app.Activity;
+import android.app.Notification;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -102,12 +103,12 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         //Decide which view to show depending on if the list is empty or not
         if (!favoritesList.isEmpty()) {
             configureRecyclerView(getActivity());
-            emptyView.setVisibility(getView().GONE);
-            recyclerView.setVisibility(getView().VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            recyclerView.setVisibility(view.VISIBLE);
         }
         else {
-            emptyView.setVisibility(getView().VISIBLE);
-            recyclerView.setVisibility(getView().GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
         coordinatorLayout = getView().findViewById(R.id.frag_fav_cl);
     }
@@ -125,11 +126,14 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
         writeToFile(getContext(), FAVORITES_LIST, favoritesList);
         recyclerViewAdapter.notifyItemRemoved(position);
 
-        displaySnackBarWithBottomMargin(position, itemRemoved);
+        int eventId = HomeRecyclerViewAdapter.getIdInt(itemRemoved.getId());
+        NotificationHandler.deleteNotification((Activity) getContext(), eventId);
+
+        displaySnackBarWithBottomMargin(position, itemRemoved, eventId);
 
         if(favoritesList.isEmpty()){
-            emptyView.setVisibility(getView().VISIBLE);
-            recyclerView.setVisibility(getView().GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -138,7 +142,7 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
      * @param position Position to insert the deleted item
      * @param event Event to be added back
      */
-    private void displaySnackBarWithBottomMargin(final int position, final Event event) {
+    private void displaySnackBarWithBottomMargin(final int position, final Event event, final int eventId) {
 
         // Get the margin for snackbar, which is equal to the height of the bottom navigation view
         TypedValue tv = new TypedValue();
@@ -163,11 +167,15 @@ public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelp
             public void onClick(View v) {
                 addEvent(event, favoritesList, position);
                 if (favoritesList.size() == 1){
-                    recyclerView.setVisibility(getView().VISIBLE);
-                    emptyView.setVisibility(getView().GONE);
+                    getView();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
                 }
                 recyclerViewAdapter.notifyItemInserted(position);
                 writeToFile(getContext(), FAVORITES_LIST, favoritesList);
+                Notification notification = NotificationHandler.buildNotfication(getActivity(), event.getTitle(), "Event has started");
+                NotificationHandler.createNotification(getActivity(), eventId, event.getStartTimeNew(), notification);
+
             }
         });
         snackbar.show();

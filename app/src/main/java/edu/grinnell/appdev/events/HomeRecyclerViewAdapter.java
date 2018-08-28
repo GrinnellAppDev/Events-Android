@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
-import static edu.grinnell.appdev.events.FragmentFavorites.*;
 import static edu.grinnell.appdev.events.FragmentFavorites.addEvent;
+import static edu.grinnell.appdev.events.FragmentFavorites.removeWithID;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
@@ -173,6 +174,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
         return false;
     }
 
+    public static int getIdInt(String id){
+        int numId = Integer.parseInt(id.substring(28));
+        return numId;
+    }
+
     /**
      *
      * @param holder Holder object that holds all the elements of a view
@@ -202,14 +208,20 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 compoundButton.startAnimation(scaleAnimation);
                 Event event = filteredList.get(position);
                 NotificationHandler.createNotificationChannel((Activity) context);
+                int lstPos = favoritesList.size() - 1;
+                int eventId = getIdInt(event.getId());
+                Log.d("ID in HRV", eventId+"");
                 //Update the favorites list
                 if (isChecked){
-                    addEvent(event, favoritesList, favoritesList.size() - 1);
+                    addEvent(event, favoritesList, lstPos);
+                    //Set up notification when the event starts
                     Notification notification = NotificationHandler.buildNotfication((Activity) context, event.getTitle(), "Event has started");
-                    NotificationHandler.createNotification((Activity) context,position, event.getStartTimeNew(), notification);
+                    NotificationHandler.createNotification((Activity) context,eventId, event.getStartTimeNew(), notification);
                 }
                 else {
+                    //Removed Scheduled notification if the user removes from favorites
                     removeWithID(event.getId(), favoritesList);
+                    NotificationHandler.deleteNotification((Activity) context, eventId);
                 }
                 // Create/Update shared preference for favorites list
                 writeToFile(context, FAVORITES_LIST, favoritesList);

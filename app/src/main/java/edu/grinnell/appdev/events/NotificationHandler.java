@@ -14,36 +14,39 @@ public class NotificationHandler{
 
 
     /**
-     * TODO: Use values other that position for notification id
+     * Sets a notification scheduler for a given event
      * @param activity Activity from which it is called
-     * @param position id of the notification
+     * @param eventId id of the notification
      * @param startTime Time at which the notification will go off
      * @param notification Notification object that will be passed to the alarm manager
      */
-    public static void createNotification(Activity activity, int position, long startTime, Notification notification){
+    public static void createNotification(Activity activity, int eventId, long startTime, Notification notification){
         Intent notificationIntent = new Intent(activity, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, position, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, eventId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, startTime, pendingIntent);
 
     }
 
     /**
-     * TODO: Does not seem to work. Check again
+     * Delete the scheduled notification if the event has been removed from favorites list
      * @param activity  Activity from which it is called
-     * @param position Id of the notification
+     * @param eventId Id of the notification
      */
-    public static void deleteNotification(Activity activity, int position){
+    public static void deleteNotification(Activity activity, int eventId){
         Intent notificationIntent = new Intent(activity, NotificationPublisher.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, position, notificationIntent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, eventId, notificationIntent,0);
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
 
 
+    /**
+     * Creates a nofication channel for more fine grained control for the user (Only applies to API 26+)
+     * @param activity Activity being called from
+     */
     public static void createNotificationChannel(Activity activity) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
