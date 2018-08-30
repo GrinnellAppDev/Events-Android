@@ -52,7 +52,7 @@
         android:layout_toEndOf="@id/vEventBackground"
         android:layout_marginStart="@dimen/margin_5"
         android:textSize="@dimen/txt_18"
-        android:text="Event jgas wjhwjhd wd jhwd "
+        android:text="Event jgas wjhwjhd wd jhwd asgdiadohasodhoaishdoasjdasdh"
         android:textColor="@color/colorBlack"
         android:ellipsize="end"
         android:maxLines="1"

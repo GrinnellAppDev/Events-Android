@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -215,8 +216,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 if (isChecked){
                     addEvent(event, favoritesList, lstPos);
                     //Set up notification when the event starts
-                    Notification notification = NotificationHandler.buildNotfication((Activity) context, event.getTitle(), "Event has started");
-                    NotificationHandler.createNotification((Activity) context,eventId, event.getStartTimeNew(), notification);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    if (currentTime.before(event.getStartTime())) {
+                        Notification notification = NotificationHandler.buildNotfication((Activity) context, event.getTitle(), "Event has started");
+                        NotificationHandler.createNotification((Activity) context, eventId, event.getStartTimeNew(), notification);
+                    }
                 }
                 else {
                     //Removed Scheduled notification if the user removes from favorites

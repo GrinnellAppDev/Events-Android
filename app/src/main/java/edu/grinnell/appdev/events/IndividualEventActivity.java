@@ -3,6 +3,7 @@ package edu.grinnell.appdev.events;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
@@ -37,7 +38,7 @@ public class IndividualEventActivity extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_individual_event);
 
-            setUpToolBar();
+            setUpToolBar(this);
 
             // Receive the event passed from home fragment
             eventData = getIntent().getParcelableExtra("Event");
@@ -54,13 +55,14 @@ public class IndividualEventActivity extends AppCompatActivity{
     /**
      * Sets up the toolbar to enable the back button
      */
-    private void setUpToolBar(){
-        Toolbar indActBar  = findViewById(R.id.ind_act_toolbar);
-        indActBar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
-        setSupportActionBar(indActBar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+    public static void setUpToolBar(Activity activity){
+        AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+        Toolbar indActBar  = activity.findViewById(R.id.ind_act_toolbar);
+        indActBar.setTitleTextColor(activity.getResources().getColor(R.color.colorWhite));
+        appCompatActivity.setSupportActionBar(indActBar);
+        if (appCompatActivity.getSupportActionBar() != null) {
+            appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            appCompatActivity.getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
     }
 
