@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +210,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
                 NotificationHandler.createNotificationChannel((Activity) context);
                 int lstPos = favoritesList.size() - 1;
                 int eventId = getIdInt(event.getId());
-                Log.d("ID in HRV", eventId+"");
                 //Update the favorites list
                 if (isChecked){
                     addEvent(event, favoritesList, lstPos);

@@ -135,7 +135,7 @@
             android:textSize="@dimen/txt_15"/>
 
         <ImageView
-            android:id="@+id/Organizer"
+            android:id="@+id/Submitter"
             android:layout_below="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,10 +144,10 @@
             android:contentDescription="Organizer"/>
 
         <TextView
-            android:id="@+id/tvOrganizer"
+            android:id="@+id/tvSubmitter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/Email"
+            android:layout_toEndOf="@id/subEmail"
             android:layout_marginTop="@dimen/margin_15"
             android:layout_below="@+id/tvLocation"
             android:text="John Smith"
@@ -155,11 +155,11 @@
             android:textSize="@dimen/txt_15"/>
 
         <ImageView
-            android:id="@+id/Email"
+            android:id="@+id/subEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_5"
-            android:layout_below="@+id/Organizer"
+            android:layout_below="@+id/Submitter"
             android:src="@drawable/ic_email"
             android:contentDescription="Email"/>
 
@@ -167,10 +167,32 @@
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/Email"
+            android:layout_toEndOf="@id/subEmail"
             android:layout_marginTop="@dimen/margin_15"
-            android:layout_below="@+id/tvOrganizer"
+            android:layout_below="@+id/tvSubmitter"
             android:text="abc@grinnell.edu"
+            android:autoLink="email"
+            android:layout_marginStart="@dimen/margin_10"
+            android:textSize="@dimen/txt_15"/>
+
+
+        <ImageView
+            android:id="@+id/Organizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_below="@+id/tvEmail"
+            android:src="@drawable/ic_organizer"
+            android:contentDescription="Organizer"/>
+
+        <TextView
+            android:id="@+id/tvOrganizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/Location"
+            android:layout_marginTop="@dimen/margin_15"
+            android:layout_below="@+id/tvEmail"
+            android:text="Organizer email"
             android:autoLink="email"
             android:layout_marginStart="@dimen/margin_10"
             android:textSize="@dimen/txt_15"/>

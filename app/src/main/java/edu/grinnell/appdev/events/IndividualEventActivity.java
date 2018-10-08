@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static android.provider.CalendarContract.Events;
+import static edu.grinnell.appdev.events.Constants.PERMISSIONS_REQUEST;
 
 /**
  * This is a new activity that creates the expanded event page
@@ -119,7 +120,9 @@ public class IndividualEventActivity extends AppCompatActivity{
             final String title = eventData.getTitle();
             final String content = eventData.getContent();
             final String location = eventData.getLocation();
-            final String email = eventData.getEmail();
+            final String subEmail = eventData.getEmail();
+            final String subName = eventData.getSubmitter();
+            final String organizer = eventData.getOrganizer();
 
             // Add elements to the text view
             TextView tvMonthText = findViewById(R.id.tvMonthText);
@@ -128,7 +131,9 @@ public class IndividualEventActivity extends AppCompatActivity{
             TextView tvEventTime = findViewById(R.id.tvTime);
             TextView tvEventLocation = findViewById(R.id.tvLocation);
             TextView tvContent = findViewById(R.id.Content);
-            TextView tvEmail = findViewById(R.id.tvEmail);
+            TextView tvSubEmail = findViewById(R.id.tvEmail);
+            TextView tvSubname = findViewById(R.id.tvSubmitter);
+            TextView tvOrganizer = findViewById(R.id.tvOrganizer);
 
             tvMonthText.setText(month);
             tvDayText.setText(day);
@@ -136,7 +141,9 @@ public class IndividualEventActivity extends AppCompatActivity{
             tvEventTime.setText(dayName + ", " + day + " " + month + " at " + startTime);
             tvEventLocation.setText(location);
             tvContent.setText(content);
-            tvEmail.setText(email);
+            tvSubEmail.setText(subEmail);
+            tvSubname.setText(subName);
+            tvOrganizer.setText(organizer);
 
             //Button responsible for adding events to the calender
             Button calenderBtn = findViewById(R.id.Calender);
@@ -149,7 +156,7 @@ public class IndividualEventActivity extends AppCompatActivity{
                                 Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(IndividualEventActivity.this,
                                     new String[]{Manifest.permission.WRITE_CALENDAR},
-                                    Constants.PERMISSIONS_REQUEST);
+                                    PERMISSIONS_REQUEST);
                     }
                     // Permission has already been granted previously
                     else {
@@ -250,7 +257,7 @@ public class IndividualEventActivity extends AppCompatActivity{
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case  Constants.PERMISSIONS_REQUEST:
+            case  PERMISSIONS_REQUEST:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

@@ -2,9 +2,7 @@ package edu.grinnell.appdev.events;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.design.widget.BottomNavigationView;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -20,20 +18,23 @@ public class Event implements Parcelable{
     private Date endTime;
     private Long startTimeMillis;
     private Long endTimeMillis;
-    private String email;
+    private String submitter;
+    private String submitterEmail;
     private String organizer;
     private String id;
     private int isDivider;
 
     public Event(String title, String content, String location,
-                 Long startTime, Long endTime, String email,
+                 Long startTime, Long endTime, String submitter, String submitterEmail,
                  String organizer, String id, int isDivider) {
         this.title = title;
         this.content = content;
         this.location = location;
         this.startTimeMillis = startTime;
         this.endTimeMillis = endTime;
-        this.email = email;
+        this.organizer = organizer;
+        this.submitter = submitter;
+        this.submitterEmail = submitterEmail;
         this.id = id;
         this.isDivider = isDivider;
     }
@@ -43,7 +44,8 @@ public class Event implements Parcelable{
         title = in.readString();
         content = in.readString();
         location = in.readString();
-        email = in.readString();
+        submitter = in.readString();
+        submitterEmail = in.readString();
         organizer = in.readString();
         id = in.readString();
         startTimeMillis = in.readLong();
@@ -73,11 +75,13 @@ public class Event implements Parcelable{
 
     public void setLocation(String location) { this.location = location; }
 
-    public void setEmail(String email) {this.email = email;}
+    public void setEmail(String email) {this.submitterEmail = email;}
 
     public void setOrganizer(String organizer) {this.organizer = organizer;}
 
     public void setID(String id) {this.id = id;}
+
+    public void setSubmitter (String submitter){ this.submitter = submitter;}
 
     public Date getStartTime() {return this.startTime;}
 
@@ -93,9 +97,11 @@ public class Event implements Parcelable{
 
     public String getLocation() { return location; }
 
-    public String getEmail() { return email; }
+    public String getEmail() { return submitterEmail; }
 
     public String getOrganizer() { return organizer; }
+
+    public String getSubmitter() { return submitter; }
 
     public String getId() {return id;}
 
@@ -112,7 +118,8 @@ public class Event implements Parcelable{
         dest.writeString(title);
         dest.writeString(content);
         dest.writeString(location);
-        dest.writeString(email);
+        dest.writeString(submitter);
+        dest.writeString(submitterEmail);
         dest.writeString(organizer);
         dest.writeString(id);
         dest.writeLong(startTimeMillis);

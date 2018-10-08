@@ -1,8 +1,12 @@
 package edu.grinnell.appdev.events;
 
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +40,7 @@ import static edu.grinnell.appdev.events.Constants.LOOSE;
 import static edu.grinnell.appdev.events.Constants.MAIN;
 import static edu.grinnell.appdev.events.Constants.MEARS;
 import static edu.grinnell.appdev.events.Constants.NORRIS;
+import static edu.grinnell.appdev.events.Constants.PERMISSIONS_REQUEST;
 import static edu.grinnell.appdev.events.Constants.RATHJE;
 import static edu.grinnell.appdev.events.Constants.RAWSON;
 import static edu.grinnell.appdev.events.Constants.READ;
@@ -53,11 +58,14 @@ import static edu.grinnell.appdev.events.Constants.ZOOM_LEVEL;
 public class FragmentMap extends Fragment {
     MapView mapView;
     GoogleMap gmap;
+    boolean mLocationPermissionGranted;
+    CameraPosition mCameraPosition;
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+
 
     public FragmentMap() {
         // Required empty public constructor
     }
-
 
     //TODO: Restore the state of the map after switching fragments. Add more Locations.
     @Override
@@ -69,53 +77,56 @@ public class FragmentMap extends Fragment {
         mapView.onCreate(savedInstanceState);
 
         if (savedInstanceState != null){
-
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
         }
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                gmap = mMap;
+        else {
 
-                // For dropping a marker at a point on the Map
-                gmap.addMarker(new MarkerOptions().position(GRINNELL).title("Grinnell College")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                gmap.addMarker(new MarkerOptions().position(HARRIS).title("Harris Cinema"));
-                gmap.addMarker(new MarkerOptions().position(COWLES).title("Cowles Hall"));
-                gmap.addMarker(new MarkerOptions().position(NORRIS).title("Norris Hall"));
-                gmap.addMarker(new MarkerOptions().position(DIBBLE).title("Dibble Hall"));
-                gmap.addMarker(new MarkerOptions().position(CLARK).title("Clark Hall"));
-                gmap.addMarker(new MarkerOptions().position(GATES).title("Gates Hall"));
-                gmap.addMarker(new MarkerOptions().position(RAWSON).title("Rawson Hall"));
-                gmap.addMarker(new MarkerOptions().position(LANGAN).title("Langan Hall"));
-                gmap.addMarker(new MarkerOptions().position(SMITH).title("Smith Hall"));
-                gmap.addMarker(new MarkerOptions().position(SPANISH_HOUSE).title("Spanish House"));
-                gmap.addMarker(new MarkerOptions().position(YOUNKER).title("Younker Hall"));
-                gmap.addMarker(new MarkerOptions().position(ARH).title("Alumni Recitation Hall (ARH)"));
-                gmap.addMarker(new MarkerOptions().position(CARNEGIE).title("Carnegie Hall"));
-                gmap.addMarker(new MarkerOptions().position(STEINER).title("Steiner Hall"));
-                gmap.addMarker(new MarkerOptions().position(GOODNOW).title("Goodnow Hall"));
-                gmap.addMarker(new MarkerOptions().position(MEARS).title("Mears Cottage"));
-                gmap.addMarker(new MarkerOptions().position(MAIN).title("Main Hall"));
-                gmap.addMarker(new MarkerOptions().position(CLEVE).title("Cleve Hall"));
-                gmap.addMarker(new MarkerOptions().position(JAMES).title("James Hall"));
-                gmap.addMarker(new MarkerOptions().position(HAINES).title("Haines Hall"));
-                gmap.addMarker(new MarkerOptions().position(READ).title("Read Hall"));
-                gmap.addMarker(new MarkerOptions().position(LOOSE).title("Loose Hall"));
-                gmap.addMarker(new MarkerOptions().position(LAZIER).title("Lazier Hall"));
-                gmap.addMarker(new MarkerOptions().position(KERSHAW).title("Kershaw Hall"));
-                gmap.addMarker(new MarkerOptions().position(ROSE).title("Rose Hall"));
-                gmap.addMarker(new MarkerOptions().position(RATHJE).title("Rathje Hall"));
+            mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    gmap = mMap;
 
-                LatLngBounds Bounds = new LatLngBounds(
-                        new LatLng(41.5, -92.9), new LatLng(41.9, -92.5));
-                gmap.setLatLngBoundsForCameraTarget(Bounds);
+                    // For dropping a marker at a point on the Map
+                    gmap.addMarker(new MarkerOptions().position(GRINNELL).title("Grinnell College")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    gmap.addMarker(new MarkerOptions().position(HARRIS).title("Harris Cinema"));
+                    gmap.addMarker(new MarkerOptions().position(COWLES).title("Cowles Hall"));
+                    gmap.addMarker(new MarkerOptions().position(NORRIS).title("Norris Hall"));
+                    gmap.addMarker(new MarkerOptions().position(DIBBLE).title("Dibble Hall"));
+                    gmap.addMarker(new MarkerOptions().position(CLARK).title("Clark Hall"));
+                    gmap.addMarker(new MarkerOptions().position(GATES).title("Gates Hall"));
+                    gmap.addMarker(new MarkerOptions().position(RAWSON).title("Rawson Hall"));
+                    gmap.addMarker(new MarkerOptions().position(LANGAN).title("Langan Hall"));
+                    gmap.addMarker(new MarkerOptions().position(SMITH).title("Smith Hall"));
+                    gmap.addMarker(new MarkerOptions().position(SPANISH_HOUSE).title("Spanish House"));
+                    gmap.addMarker(new MarkerOptions().position(YOUNKER).title("Younker Hall"));
+                    gmap.addMarker(new MarkerOptions().position(ARH).title("Alumni Recitation Hall (ARH)"));
+                    gmap.addMarker(new MarkerOptions().position(CARNEGIE).title("Carnegie Hall"));
+                    gmap.addMarker(new MarkerOptions().position(STEINER).title("Steiner Hall"));
+                    gmap.addMarker(new MarkerOptions().position(GOODNOW).title("Goodnow Hall"));
+                    gmap.addMarker(new MarkerOptions().position(MEARS).title("Mears Cottage"));
+                    gmap.addMarker(new MarkerOptions().position(MAIN).title("Main Hall"));
+                    gmap.addMarker(new MarkerOptions().position(CLEVE).title("Cleve Hall"));
+                    gmap.addMarker(new MarkerOptions().position(JAMES).title("James Hall"));
+                    gmap.addMarker(new MarkerOptions().position(HAINES).title("Haines Hall"));
+                    gmap.addMarker(new MarkerOptions().position(READ).title("Read Hall"));
+                    gmap.addMarker(new MarkerOptions().position(LOOSE).title("Loose Hall"));
+                    gmap.addMarker(new MarkerOptions().position(LAZIER).title("Lazier Hall"));
+                    gmap.addMarker(new MarkerOptions().position(KERSHAW).title("Kershaw Hall"));
+                    gmap.addMarker(new MarkerOptions().position(ROSE).title("Rose Hall"));
+                    gmap.addMarker(new MarkerOptions().position(RATHJE).title("Rathje Hall"));
 
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(GRINNELL).zoom(ZOOM_LEVEL).build();
-                gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
+                    LatLngBounds Bounds = new LatLngBounds(
+                            new LatLng(41.5, -92.9), new LatLng(41.9, -92.5));
+                    gmap.setLatLngBoundsForCameraTarget(Bounds);
+
+                    // For zooming automatically to the location of the marker
+                    mCameraPosition = new CameraPosition.Builder().target(GRINNELL).zoom(ZOOM_LEVEL).build();
+                    gmap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+                }
+            });
+        }
         return v;
     }
 
@@ -135,6 +146,40 @@ public class FragmentMap extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+        //updateLocationUI();
     }
 
 }

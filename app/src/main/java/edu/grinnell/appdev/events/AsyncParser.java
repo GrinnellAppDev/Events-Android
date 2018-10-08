@@ -44,7 +44,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private String evlocation;
     private Long startTime;
     private Long endTime;
-    private String orgEmail;
+    private String subEmail;
+    private String subName;
     private String organizer;
     private String id;
     private Date startTimeCurEvent;
@@ -108,7 +109,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                         if (startTimePrevEvent == null || startTimePrevEvent.before(startTimeCurEvent)){
                             if (startTimeCurEvent != null) {
                                 Event pseudoEvent = new Event("", "", "",
-                                        startTimeCurEvent.getTime(), (long) 0, "", "",
+                                        startTimeCurEvent.getTime(), (long) 0, "", "", "",
                                         "", 1);
                                 eventList.add(pseudoEvent);
                                 startTimePrevEvent = startTimeCurEvent;
@@ -117,8 +118,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
                         //Populate the event and add it to the list
                         if (startTime != null) {
-                            event = new Event(title, content, evlocation, startTime, endTime, orgEmail,
-                                    "John Smith", id, 0);
+                            event = new Event(title, content, evlocation, startTime, endTime, subName,
+                                    subEmail, organizer, id, 0);
                             eventList.add(event);
                         }
                     }
@@ -150,10 +151,23 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         //Add email
         Document doc= Jsoup.parse(content);
         Element email = doc.select("a").last();
-        orgEmail = email.text();
+        //subEmail = email.text();
 
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
+        for(int i = 0; i < arr.length; i++){
+            String data = arr[i];
+            if (data.contains("Submitter Name")) {
+                subName = data;
+            }
+            else if (data.contains("Submitter Email")){
+                subEmail = data;
+            }
+            else if (data.contains("Organizer")){
+                organizer = data;
+            }
+        }
+
         //Description of the event
         String description = arr[3];
 
