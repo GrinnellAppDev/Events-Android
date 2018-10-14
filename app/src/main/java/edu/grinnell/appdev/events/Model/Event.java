@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

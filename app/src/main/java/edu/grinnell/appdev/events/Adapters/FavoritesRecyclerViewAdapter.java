@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Adapters;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.R;
 
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 

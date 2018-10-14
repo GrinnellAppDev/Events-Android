@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.NotificationHandler;
 
 import android.app.Notification;
 import android.app.NotificationManager;

@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Adapters;
 
 
 import android.app.Activity;
@@ -25,9 +25,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
-import static edu.grinnell.appdev.events.FragmentFavorites.addEvent;
-import static edu.grinnell.appdev.events.FragmentFavorites.removeWithID;
+import edu.grinnell.appdev.events.Activities.IndividualEventActivity;
+import edu.grinnell.appdev.events.Misc.Constants;
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.MainActivity;
+import edu.grinnell.appdev.events.NotificationHandler.NotificationHandler;
+import edu.grinnell.appdev.events.R;
+
+import static edu.grinnell.appdev.events.Misc.Constants.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Fragments.FragmentFavorites.addEvent;
+import static edu.grinnell.appdev.events.Fragments.FragmentFavorites.removeWithID;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
@@ -42,7 +49,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter implements Fil
      *
      * @param context A context field required to store in shared preference
      */
-    HomeRecyclerViewAdapter(Context context, ArrayList<Event> eventArrayList){
+    public HomeRecyclerViewAdapter(Context context, ArrayList<Event> eventArrayList){
         this.context = context;
         this.eventArrayList = eventArrayList;
         this.filteredList = eventArrayList;

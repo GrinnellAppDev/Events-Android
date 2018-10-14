@@ -28,11 +28,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.grinnell.appdev.events.Constants.*;
-import static edu.grinnell.appdev.events.Constants.XML_STRING;
+import edu.grinnell.appdev.events.Activities.FeedbackActivity;
+import edu.grinnell.appdev.events.Fragments.FragmentFavorites;
+import edu.grinnell.appdev.events.Fragments.FragmentHome;
+import edu.grinnell.appdev.events.Fragments.FragmentMap;
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.Parser.AsyncParser;
+import edu.grinnell.appdev.events.Parser.Downloader;
+import edu.grinnell.appdev.events.Parser.OnDownloadComplete;
+import edu.grinnell.appdev.events.Parser.OnParseComplete;
+
+import static edu.grinnell.appdev.events.Misc.Constants.*;
+import static edu.grinnell.appdev.events.Misc.Constants.XML_STRING;
 
 
-public class MainActivity extends AppCompatActivity implements OnDownloadComplete, onParseComplete{
+public class MainActivity extends AppCompatActivity implements OnDownloadComplete, OnParseComplete {
     private String xmlData;
     private List<Event> eventList;
     public static ArrayList<Event> favoritesList;

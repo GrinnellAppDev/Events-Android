@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Activities;
 
 
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import edu.grinnell.appdev.events.R;
 
 public class FeedbackActivity extends AppCompatActivity{
 

@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Activities;
 
 
 import android.Manifest;
@@ -24,8 +24,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.R;
+
 import static android.provider.CalendarContract.Events;
-import static edu.grinnell.appdev.events.Constants.PERMISSIONS_REQUEST;
+import static edu.grinnell.appdev.events.Misc.Constants.PERMISSIONS_REQUEST;
 
 /**
  * This is a new activity that creates the expanded event page

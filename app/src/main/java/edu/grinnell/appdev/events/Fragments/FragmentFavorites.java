@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Fragments;
 
 
 import android.app.Activity;
@@ -19,8 +19,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import edu.grinnell.appdev.events.Adapters.FavoritesRecyclerViewAdapter;
+import edu.grinnell.appdev.events.Adapters.HomeRecyclerViewAdapter;
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.NotificationHandler.NotificationHandler;
+import edu.grinnell.appdev.events.R;
+import edu.grinnell.appdev.events.Misc.RecyclerItemTouchHelper;
+
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Misc.Constants.FAVORITES_LIST;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 
@@ -28,7 +35,7 @@ import static edu.grinnell.appdev.events.MainActivity.writeToFile;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
+public class FragmentFavorites extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private RecyclerView recyclerView;
     private TextView emptyView;

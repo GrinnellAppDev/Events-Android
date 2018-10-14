@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Fragments;
 
 
 import android.content.pm.PackageManager;
@@ -21,35 +21,37 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static edu.grinnell.appdev.events.Constants.ARH;
-import static edu.grinnell.appdev.events.Constants.CARNEGIE;
-import static edu.grinnell.appdev.events.Constants.CLARK;
-import static edu.grinnell.appdev.events.Constants.CLEVE;
-import static edu.grinnell.appdev.events.Constants.COWLES;
-import static edu.grinnell.appdev.events.Constants.DIBBLE;
-import static edu.grinnell.appdev.events.Constants.GATES;
-import static edu.grinnell.appdev.events.Constants.GOODNOW;
-import static edu.grinnell.appdev.events.Constants.GRINNELL;
-import static edu.grinnell.appdev.events.Constants.HAINES;
-import static edu.grinnell.appdev.events.Constants.HARRIS;
-import static edu.grinnell.appdev.events.Constants.JAMES;
-import static edu.grinnell.appdev.events.Constants.KERSHAW;
-import static edu.grinnell.appdev.events.Constants.LANGAN;
-import static edu.grinnell.appdev.events.Constants.LAZIER;
-import static edu.grinnell.appdev.events.Constants.LOOSE;
-import static edu.grinnell.appdev.events.Constants.MAIN;
-import static edu.grinnell.appdev.events.Constants.MEARS;
-import static edu.grinnell.appdev.events.Constants.NORRIS;
-import static edu.grinnell.appdev.events.Constants.PERMISSIONS_REQUEST;
-import static edu.grinnell.appdev.events.Constants.RATHJE;
-import static edu.grinnell.appdev.events.Constants.RAWSON;
-import static edu.grinnell.appdev.events.Constants.READ;
-import static edu.grinnell.appdev.events.Constants.ROSE;
-import static edu.grinnell.appdev.events.Constants.SMITH;
-import static edu.grinnell.appdev.events.Constants.SPANISH_HOUSE;
-import static edu.grinnell.appdev.events.Constants.STEINER;
-import static edu.grinnell.appdev.events.Constants.YOUNKER;
-import static edu.grinnell.appdev.events.Constants.ZOOM_LEVEL;
+import edu.grinnell.appdev.events.R;
+
+import static edu.grinnell.appdev.events.Misc.Constants.ARH;
+import static edu.grinnell.appdev.events.Misc.Constants.CARNEGIE;
+import static edu.grinnell.appdev.events.Misc.Constants.CLARK;
+import static edu.grinnell.appdev.events.Misc.Constants.CLEVE;
+import static edu.grinnell.appdev.events.Misc.Constants.COWLES;
+import static edu.grinnell.appdev.events.Misc.Constants.DIBBLE;
+import static edu.grinnell.appdev.events.Misc.Constants.GATES;
+import static edu.grinnell.appdev.events.Misc.Constants.GOODNOW;
+import static edu.grinnell.appdev.events.Misc.Constants.GRINNELL;
+import static edu.grinnell.appdev.events.Misc.Constants.HAINES;
+import static edu.grinnell.appdev.events.Misc.Constants.HARRIS;
+import static edu.grinnell.appdev.events.Misc.Constants.JAMES;
+import static edu.grinnell.appdev.events.Misc.Constants.KERSHAW;
+import static edu.grinnell.appdev.events.Misc.Constants.LANGAN;
+import static edu.grinnell.appdev.events.Misc.Constants.LAZIER;
+import static edu.grinnell.appdev.events.Misc.Constants.LOOSE;
+import static edu.grinnell.appdev.events.Misc.Constants.MAIN;
+import static edu.grinnell.appdev.events.Misc.Constants.MEARS;
+import static edu.grinnell.appdev.events.Misc.Constants.NORRIS;
+import static edu.grinnell.appdev.events.Misc.Constants.PERMISSIONS_REQUEST;
+import static edu.grinnell.appdev.events.Misc.Constants.RATHJE;
+import static edu.grinnell.appdev.events.Misc.Constants.RAWSON;
+import static edu.grinnell.appdev.events.Misc.Constants.READ;
+import static edu.grinnell.appdev.events.Misc.Constants.ROSE;
+import static edu.grinnell.appdev.events.Misc.Constants.SMITH;
+import static edu.grinnell.appdev.events.Misc.Constants.SPANISH_HOUSE;
+import static edu.grinnell.appdev.events.Misc.Constants.STEINER;
+import static edu.grinnell.appdev.events.Misc.Constants.YOUNKER;
+import static edu.grinnell.appdev.events.Misc.Constants.ZOOM_LEVEL;
 
 
 /**

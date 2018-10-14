@@ -1,11 +1,12 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Misc;
 
 
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
+
+import edu.grinnell.appdev.events.R;
 
 import static edu.grinnell.appdev.events.R.id.view_foreground;
 

@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Fragments;
 
 
 import android.app.Activity;
@@ -25,9 +25,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import edu.grinnell.appdev.events.Adapters.HomeRecyclerViewAdapter;
+import edu.grinnell.appdev.events.Model.Event;
+import edu.grinnell.appdev.events.R;
+
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-import static edu.grinnell.appdev.events.Constants.FAVORITES_LIST;
-import static edu.grinnell.appdev.events.Constants.REFRESH_OFFSET;
+import static edu.grinnell.appdev.events.Misc.Constants.FAVORITES_LIST;
+import static edu.grinnell.appdev.events.Misc.Constants.REFRESH_OFFSET;
 import static edu.grinnell.appdev.events.MainActivity.downloadContent;
 import static edu.grinnell.appdev.events.MainActivity.favoritesList;
 import static edu.grinnell.appdev.events.MainActivity.readData;

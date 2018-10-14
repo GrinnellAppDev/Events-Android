@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.NotificationHandler;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -9,6 +9,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
+import edu.grinnell.appdev.events.R;
 
 public class NotificationHandler{
 

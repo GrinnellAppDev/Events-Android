@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Parser;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import static edu.grinnell.appdev.events.Constants.ERROR_PARSING;
-import static edu.grinnell.appdev.events.Constants.FRESH_START;
-import static edu.grinnell.appdev.events.Constants.LENGTH_OF_XML_DECLARATION;
-import static edu.grinnell.appdev.events.Constants.SUCCESS;
+import edu.grinnell.appdev.events.Model.Event;
+
+import static edu.grinnell.appdev.events.Misc.Constants.ERROR_PARSING;
+import static edu.grinnell.appdev.events.Misc.Constants.FRESH_START;
+import static edu.grinnell.appdev.events.Misc.Constants.LENGTH_OF_XML_DECLARATION;
+import static edu.grinnell.appdev.events.Misc.Constants.SUCCESS;
 
 /**
  * This class is responsible for parsing the XML string and creating a final events list
@@ -35,7 +37,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private List<Event> eventList;
     private String text;
     private Event event;
-    private onParseComplete mOnParseComplete;
+    private OnParseComplete mOnParseComplete;
     private ProgressDialog progressDialog;
     private Activity activity;
 
@@ -51,8 +53,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
     private Date startTimeCurEvent;
     private Date startTimePrevEvent;
 
-    AsyncParser (Activity activity) {
-        this.mOnParseComplete = (onParseComplete) activity;
+    public AsyncParser (Activity activity) {
+        this.mOnParseComplete = (OnParseComplete) activity;
         this.activity = activity;
     }
 
@@ -86,7 +88,6 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             e.printStackTrace();
             return ERROR_PARSING;
         }
-        int count = 0;
         //Iterate through each event
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = xpp.getName();

@@ -17,7 +17,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBB8Dq5njMD-dmU_CDOd9FgLOzoLQF5NPs" />
 
-        <activity android:name=".SplashActivity"
+        <activity android:name=".Activities.SplashActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
@@ -38,15 +38,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".IndividualEventActivity"
+        <activity android:name=".Activities.IndividualEventActivity"
             android:label="@string/individual_profile"
             android:theme="@style/IndActivity"/>
 
-        <activity android:name=".FeedbackActivity"
+        <activity android:name=".Activities.FeedbackActivity"
             android:label="@string/feedback"
             android:theme="@style/IndActivity"/>
 
-        <receiver android:name=".NotificationPublisher"/>
+        <receiver android:name=".NotificationHandler.NotificationPublisher"/>
 
     </application>
 

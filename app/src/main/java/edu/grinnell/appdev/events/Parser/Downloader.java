@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Parser;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -11,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import static edu.grinnell.appdev.events.Misc.Constants.*;
 
 /**
  * This class is responsible for downloading the XML from the web and
@@ -25,7 +25,7 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
     private ProgressDialog progressDialog;
 
 
-    Downloader(Activity activity) {
+    public Downloader(Activity activity) {
         this.mOnDownloadComplete = (OnDownloadComplete) activity;
         this.activity = activity;
     }

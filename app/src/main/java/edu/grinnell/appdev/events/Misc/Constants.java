@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Misc;
 
 
 import com.google.android.gms.maps.model.LatLng;
