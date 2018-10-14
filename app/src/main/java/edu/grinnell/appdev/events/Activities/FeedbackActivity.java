@@ -17,7 +17,7 @@ public class FeedbackActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feedback);
-        IndividualEventActivity.setUpToolBar(this);
+        IndividualEventActivity.setUpToolBar(this, true);
         configureView();
     }
 

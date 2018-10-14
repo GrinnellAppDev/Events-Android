@@ -42,7 +42,7 @@ public class IndividualEventActivity extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_individual_event);
 
-            setUpToolBar(this);
+            setUpToolBar(this, false);
 
             // Receive the event passed from home fragment
             eventData = getIntent().getParcelableExtra("Event");
@@ -59,11 +59,16 @@ public class IndividualEventActivity extends AppCompatActivity{
     /**
      * Sets up the toolbar to enable the back button
      */
-    public static void setUpToolBar(Activity activity){
+    public static void setUpToolBar(Activity activity, boolean feedback){
         AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-        Toolbar indActBar  = activity.findViewById(R.id.ind_act_toolbar);
-        indActBar.setTitleTextColor(activity.getResources().getColor(R.color.colorWhite));
-        appCompatActivity.setSupportActionBar(indActBar);
+        Toolbar toolbar;
+        if (feedback){
+            toolbar  = activity.findViewById(R.id.feedback_toolbar);
+        } else {
+            toolbar  = activity.findViewById(R.id.ind_act_toolbar);
+        }
+        toolbar.setTitleTextColor(activity.getResources().getColor(R.color.colorWhite));
+        appCompatActivity.setSupportActionBar(toolbar);
         if (appCompatActivity.getSupportActionBar() != null) {
             appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             appCompatActivity.getSupportActionBar().setDisplayShowHomeEnabled(true);
