@@ -3,81 +3,97 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    >
 
-    <ImageView
-        android:id="@+id/ivEventPic"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    <View
+        android:id="@+id/vEventBackground"
+        android:layout_width="@dimen/len_75"
+        android:layout_height="@dimen/len_75"
+        android:layout_margin="@dimen/margin_5"
+        android:visibility="visible"
+        android:background="@color/colorScarlet"/>
 
-    <TextView
-        android:id="@+id/tvImageText"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignTop="@id/ivEventPic"
-        android:layout_alignRight="@id/ivEventPic"
-        android:layout_margin="3dp"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:text="FEB 15"/>
+    <LinearLayout
+        android:layout_width="@dimen/len_75"
+        android:layout_height="@dimen/len_75"
+        android:layout_alignTop="@id/vEventBackground"
+        android:layout_alignEnd="@id/vEventBackground"
+        android:orientation="vertical"
+        android:id="@+id/Date">
+
+        <TextView
+            android:id="@+id/tvMonthText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/txt_25"
+            android:textColor="@color/colorWhite"
+            android:text="FEB"/>
+
+        <TextView
+            android:id="@+id/tvDayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/colorWhite"
+            android:text="15"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvEventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_marginLeft="5dp"
-        android:textSize="20sp"
-        android:text="Event"/>
+        android:layout_toEndOf="@id/vEventBackground"
+        android:layout_marginStart="@dimen/margin_5"
+        android:textSize="@dimen/txt_18"
+        android:text="Event jgas wjhwjhd wd jhwd asgdiadohasodhoaishdoasjdasdh"
+        android:textColor="@color/colorBlack"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="@dimen/txt_limit_800"/>
 
     <TextView
         android:id="@+id/tvEventTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@id/vEventBackground"
+        android:layout_marginStart="@dimen/margin_5"
         android:layout_below="@id/tvEventName"
-        android:textSize="15sp"
+        android:textSize="@dimen/txt_15"
         android:text="Time"/>
 
     <TextView
         android:id="@+id/tvEventLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_marginLeft="5dp"
+        android:layout_toEndOf="@id/vEventBackground"
+        android:layout_marginStart="@dimen/margin_5"
         android:layout_below="@id/tvEventTime"
-        android:textSize="15sp"
-        android:text="Location"/>
+        android:textSize="@dimen/txt_15"
+        android:text="Location"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="@dimen/txt_limit_275"
+        />
 
-    <ImageView
-        android:id="@+id/ivComments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ivEventPic"
-        android:layout_below="@id/tvEventLocation"
-        android:src="@drawable/ic_comments"/>
-
-    <TextView
-        android:id="@+id/tvNumComments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/ivComments"
-        android:layout_below="@id/tvEventLocation"
-        android:layout_toRightOf="@id/ivComments"
-        android:layout_marginTop="3dp"
-        android:textSize="15sp"
-        android:text="10"/>
-
-    <TextView
-        android:id="@+id/tvPeopleGoing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/ivComments"
-        android:layout_toRightOf="@id/tvNumComments"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="15dp"
-        android:textSize="15sp"
-        android:text="0 people going"/>
+    <ToggleButton
+        android:layout_width="@dimen/len_30"
+        android:layout_height="@dimen/len_30"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:id="@+id/myToggleButton"
+        android:background="@drawable/button_favorite"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textOn=""
+        android:textOff=""
+        android:text=""
+        />
 
 </RelativeLayout>

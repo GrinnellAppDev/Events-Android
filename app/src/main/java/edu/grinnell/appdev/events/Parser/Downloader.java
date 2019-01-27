@@ -1,6 +1,7 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Parser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import static edu.grinnell.appdev.events.Misc.Constants.*;
 
 /**
  * This class is responsible for downloading the XML from the web and
@@ -20,9 +21,26 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
 
     private String xmlString;
     private OnDownloadComplete mOnDownloadComplete;
+    private Activity activity;
+    private ProgressDialog progressDialog;
 
-    Downloader(Activity activity) {
+
+    public Downloader(Activity activity) {
         this.mOnDownloadComplete = (OnDownloadComplete) activity;
+        this.activity = activity;
+    }
+
+    /**
+     * Creates a dialog box indicating the user that the data is being downloaded
+     */
+    @Override
+    protected void onPreExecute(){
+        if (FRESH_START) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("App status");
+            progressDialog.setMessage("Downloading data");
+            progressDialog.show();
+        }
     }
 
     /**
@@ -116,6 +134,10 @@ public class Downloader extends AsyncTask <String, Void, Integer>{
             String failMsg = "Downloading of the XML failed";
             mOnDownloadComplete.onDownloadFail(failMsg);
         }
+        if (FRESH_START) {
+            progressDialog.dismiss();
+        }
+
     }
 
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/feedback_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:backgroundTint="@color/colorScarlet"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:theme="@style/ToolbarStyle"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+    <TextView
+        android:id="@+id/tvFeedbackHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_10"
+        android:text="@string/feedback_request"
+        android:textAlignment="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_18"/>
+
+    <EditText
+        android:id="@+id/etFeedbackContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.EditText"
+        android:padding="@dimen/padd_10"
+        android:textSize="@dimen/txt_15"
+        android:layout_below="@+id/tvFeedbackHeading"
+        android:layout_marginTop="15dp"
+        android:inputType="textMultiLine"
+        android:labelFor="@+id/etFeedbackContent"/>
+
+    <Button
+        android:id="@+id/Feedback_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_below="@+id/etFeedbackContent"
+        android:text="Send feedback"
+        android:background="@color/colorScarlet"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
+
+
+
+

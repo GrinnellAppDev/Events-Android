@@ -1,10 +1,13 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Parser;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -19,35 +22,61 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import static edu.grinnell.appdev.events.Constants.*;
+import edu.grinnell.appdev.events.Model.Event;
 
+import static edu.grinnell.appdev.events.Misc.Constants.ERROR_PARSING;
+import static edu.grinnell.appdev.events.Misc.Constants.FRESH_START;
+import static edu.grinnell.appdev.events.Misc.Constants.LENGTH_OF_XML_DECLARATION;
+import static edu.grinnell.appdev.events.Misc.Constants.SUCCESS;
 
+/**
+ * This class is responsible for parsing the XML string and creating a final events list
+ */
 public class AsyncParser extends AsyncTask<String, Void, Integer>{
 
     private List<Event> eventList;
     private String text;
     private Event event;
-    private onParseComplete mOnParseComplete;
+    private OnParseComplete mOnParseComplete;
+    private ProgressDialog progressDialog;
+    private Activity activity;
 
-    AsyncParser (Activity activity) {
-        this.mOnParseComplete = (onParseComplete) activity;
+    private String title;
+    private String content;
+    private String evlocation;
+    private Long startTime;
+    private Long endTime;
+    private String subEmail;
+    private String subName;
+    private String organizer;
+    private String id;
+    private Date startTimeCurEvent;
+    private Date startTimePrevEvent;
+
+    public AsyncParser (Activity activity) {
+        this.mOnParseComplete = (OnParseComplete) activity;
+        this.activity = activity;
     }
 
     /**
-     *
-     * @return eventList A list that contains all the events
+     * Creates a dialog box indicating the user that the data is being downloaded
      */
-    public List<Event> getEventList() {
-        return eventList;
+    @Override
+    protected void onPreExecute(){
+        if (FRESH_START) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("App status");
+            progressDialog.setMessage("Downloading data");
+            progressDialog.show();
+        }
     }
-
 
     //The method is supposed to parse the XML string that is passed as an argument
     @Override
     protected Integer doInBackground(String... strings) {
-        XmlPullParserFactory factory = null;
-        XmlPullParser xpp = null;
-        int eventType = 0;
+        XmlPullParserFactory factory;
+        XmlPullParser xpp;
+        int eventType;
         try {
             factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -59,30 +88,41 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
             e.printStackTrace();
             return ERROR_PARSING;
         }
-
         //Iterate through each event
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = xpp.getName();
             switch (eventType) {
-                //Case where the parser finds an event start tag
-                case XmlPullParser.START_TAG:
-                    if (tagName.equalsIgnoreCase("title")) {
-                        event = new Event();
-                    }
-                    break;
                 //Case where the parser finds core information about an event
                 case XmlPullParser.TEXT:
                     text = xpp.getText();
                     break;
                 //Case where the parser finds an event end tag
                 case XmlPullParser.END_TAG:
-                    if (tagName.equalsIgnoreCase("entry")) {
-                        eventList.add(event);
-                    } else if (tagName.equalsIgnoreCase("title")) {
-                        event.setTitle(text);
+                    if (tagName.equalsIgnoreCase("title")) {
+                        title = text;
+                    } else if (tagName.equalsIgnoreCase("id")) {
+                        id = text;
                     } else if (tagName.equalsIgnoreCase("content")) {
-                        event.setContent(text);
                         parseContent(text);
+
+                        //Adding row divided for each day in recycler view. Stored a an event object
+                        // with only one field
+                        if (startTimePrevEvent == null || startTimePrevEvent.before(startTimeCurEvent)){
+                            if (startTimeCurEvent != null) {
+                                Event pseudoEvent = new Event("", "", "",
+                                        startTimeCurEvent.getTime(), (long) 0, "", "", "",
+                                        "", 1);
+                                eventList.add(pseudoEvent);
+                                startTimePrevEvent = startTimeCurEvent;
+                            }
+                        }
+
+                        //Populate the event and add it to the list
+                        if (startTime != null) {
+                            event = new Event(title, content, evlocation, startTime, endTime, subName,
+                                    subEmail, organizer, id, 0);
+                            eventList.add(event);
+                        }
                     }
                     break;
 
@@ -108,17 +148,37 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param content A string that will be converted to a parsable format
      */
     private Integer parseContent(String content) {
+
+        //Add email
+        Document doc= Jsoup.parse(content);
+        Element email = doc.select("a").last();
+        //subEmail = email.text();
+
         //Convert to XHTML into parsable format
         String arr[] = Html.fromHtml(content).toString().split("\n");
+        for(int i = 0; i < arr.length; i++){
+            String data = arr[i];
+            if (data.contains("Submitter Name")) {
+                subName = data;
+            }
+            else if (data.contains("Submitter Email")){
+                subEmail = data;
+            }
+            else if (data.contains("Organizer")){
+                organizer = data;
+            }
+        }
+
         //Description of the event
         String description = arr[3];
+
         //Check for any outlier since the XML is not standardized
         if (!(arr.length < 6) && description.length() > 0) {
-            event.setContent(description);
+            this.content = description;
 
             //Location of the event
             String location = arr[0];
-            event.setLocation(location);
+            evlocation = location;
 
             //Start and end date for the events
             String date = arr[1];
@@ -138,7 +198,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param input Time that needs to be added minutes
      * @return Str Time represented in a string format
      */
-    public static String addMinutes(String input) {
+    private static String addMinutes(String input) {
         // Save the am/pm part of the string (last two digits)
         String ampm = input.substring(input.length() - 2, input.length());
 
@@ -161,7 +221,7 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
      * @param year The year that the event starts and ends
      * @return strings formatted start and end times
      */
-    public static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek,
+    private static ArrayList<String> standardizeTime(String unformattedTime, String dayOfWeek,
                                                     String endDayOfWeek,String month,
                                                     String endMonth, String dayOfMonth,
                                                     String endDayOfMonth, String year){
@@ -250,7 +310,8 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 unformattedTime = unformattedStartStr + " " + "-" + " " + unformattedEndStr;
 
                 //List that contains the standardized time
-                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month, endMonth, dayOfMonth, endDayofMonth,year);
+                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month,
+                        endMonth, dayOfMonth, endDayofMonth,year);
             }
             else {
                 //Saturday, April 21, 7am – Sunday, April 22, 2018, 1am
@@ -265,15 +326,25 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
                 unformattedTime = unformattedStartStr + " " + "-" + " " + unformattedEndStr;
 
                 //List that contains the standardized time
-                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month, endMonth, dayOfMonth, endDayofMonth,year);
+                formattedDateTime = standardizeTime(unformattedTime, dayOfWeek, endDayofWeek, month,
+                        endMonth, dayOfMonth, endDayofMonth,year);
             }
 
             //Storing the start time and end time
-            Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(0));
-            Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH).parse(formattedDateTime.get(1));
+            Date start = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH)
+                    .parse(formattedDateTime.get(0));
+            Date end = new SimpleDateFormat("EEEE MMMM dd yyyy hh:mma", Locale.ENGLISH)
+                    .parse(formattedDateTime.get(1));
 
-            event.setStartTime(start);
-            event.setEndTime(end);
+            //Ignore the time of the event
+            startTimeCurEvent = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.US)
+                    .parse(dayOfWeek + " " + month + " " + dayOfMonth + " " + year);
+
+            //Store the date as Long for parcelable
+            if (start != null) {
+                startTime = start.getTime();
+                endTime = end.getTime();
+            }
         }
     }
 
@@ -291,6 +362,10 @@ public class AsyncParser extends AsyncTask<String, Void, Integer>{
         else {
             String failMsg = "Unable to load data";
             mOnParseComplete.onParseFail(failMsg);
+        }
+        if (FRESH_START) {
+            progressDialog.dismiss();
+            FRESH_START = false;
         }
     }
 }

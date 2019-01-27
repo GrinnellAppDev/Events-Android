@@ -1,4 +1,4 @@
-package edu.grinnell.appdev.events;
+package edu.grinnell.appdev.events.Parser;
 
 /**
  * Provides methods to implement that is used by the Downloader class
