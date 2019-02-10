@@ -13,7 +13,7 @@ public class SplashActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         //Start Main Activity after Splash screen is displayed
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
