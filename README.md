@@ -2,7 +2,7 @@
 
 The new Grinnell Events App created by the Android Development Team @ AppDev.
 
-####### Collaborators:
+## Collaborators:
 - Abyaya Lamsal
 - Zoe Grubbs
 - Pratik Karki
